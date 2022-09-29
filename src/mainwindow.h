@@ -16,10 +16,13 @@ public:
   ~MainWindow();
 
 private:
-  QPointer<QGroupBox> m_main_view = nullptr;
+  QPointer<QWidget> m_main_view = nullptr;
 
+  QPointer<QGroupBox> m_path_selects = nullptr;
   QPointer<PathPicker> m_input_select = nullptr;
   QPointer<PathPicker> m_output_select = nullptr;
+
+  QPointer<QGroupBox> m_settings_box = nullptr;
 
 };
 #endif // MAINWINDOW_H

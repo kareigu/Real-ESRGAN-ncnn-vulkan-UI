@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 project(realesrgan-ncnn-vulkan-ui VERSION 0.1 LANGUAGES CXX)
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
