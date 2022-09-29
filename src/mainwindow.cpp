@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
   m_input_select = new PathPicker(tr("Input"));
   m_output_select = new PathPicker(tr("Output"));
   m_path_selects->layout()->addWidget(m_input_select);
-  m_path_selects-> layout()->addWidget(m_output_select);
+  m_path_selects->layout()->addWidget(m_output_select);
 
   m_settings_box = new QGroupBox(m_main_view);
 
