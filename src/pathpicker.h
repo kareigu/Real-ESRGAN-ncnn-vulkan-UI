@@ -15,11 +15,11 @@ public:
 	PathPicker(QWidget* parent = nullptr);
 	~PathPicker();
 
-	void set_mode(bool select_folder) { m_select_folder = select_folder; }
-	void set_folder_mode() { m_select_folder = true; }
-	void set_file_mode() { m_select_folder = false; }
+	void set_mode(bool save) { m_save = save; }
+	void set_save_mode() { m_save = true; }
+	void set_open_mode() { m_save = false; }
 
-	bool mode() { return m_select_folder; }
+	bool mode() { return m_save; }
 
 	const QString path() const { return m_path->text(); }
 	void set_path(const QString& path) { m_path->setText(path); }
@@ -29,7 +29,7 @@ public:
 private:
 	void m_init();
 
-	bool m_select_folder = false;
+	bool m_save = false;
 
 	std::function<void(const QString& path)> m_select_callback;
 

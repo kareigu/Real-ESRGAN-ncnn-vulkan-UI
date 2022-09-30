@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   m_input_select = new PathPicker(tr("Input"));
   m_output_select = new PathPicker(tr("Output"));
-  m_output_select->set_folder_mode();
+  m_output_select->set_save_mode();
   m_input_select->set_select_callback([&](const QString& path) {
     QFileInfo file_info(path);
     QDir folder = file_info.dir();
