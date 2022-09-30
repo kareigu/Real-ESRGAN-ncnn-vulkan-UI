@@ -1,6 +1,8 @@
 #include "pathpicker.h"
-#include <QHBoxLayout>
 #include <QFileDialog>
+#include <QHBoxLayout>
+
+#include "messagelog.h"
 
 PathPicker::PathPicker(const QString& title, QWidget* parent) : QWidget(parent) {
 	m_title = new QLabel();
@@ -20,7 +22,12 @@ void PathPicker::m_init() {
 	m_browse_button->setText(tr("&Browse"));
 
 	connect(m_browse_button, &QPushButton::released, this, [&] {
-		auto path = QFileDialog::getOpenFileName(this, tr("Select image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
+		auto path = m_select_folder
+			? QFileDialog::getExistingDirectory(this, tr("Select folder"))
+			: QFileDialog::getOpenFileName(this, tr("Select image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
+
+		debugln(QString("Path selected: { m_select_folder = %1, path = %2 }").arg(m_select_folder).arg(path));
+
 		m_path->setText(path);
 	});
 

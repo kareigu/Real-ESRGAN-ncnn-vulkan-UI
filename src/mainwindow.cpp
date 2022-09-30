@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
   m_path_selects->setLayout(new QVBoxLayout);
   m_input_select = new PathPicker(tr("Input"));
   m_output_select = new PathPicker(tr("Output"));
+  m_output_select->set_folder_mode();
   m_path_selects->layout()->addWidget(m_input_select);
   m_path_selects->layout()->addWidget(m_output_select);
 
