@@ -29,8 +29,12 @@ MainWindow::MainWindow(QWidget *parent)
   m_input_select->set_select_callback([&](const QString& path) {
     QFileInfo file_info(path);
     QDir folder = file_info.dir();
-    QString filename = QString("%1_up.%2")
+    QString filename_ext = QString("%1_%2x")
+      .arg(m_settings_panel->model())
+      .arg(m_settings_panel->up_size());
+    QString filename = QString("%1_%2.%3")
       .arg(file_info.baseName())
+      .arg(filename_ext)
       .arg(file_info.completeSuffix());
     m_output_select->set_path(folder.filePath(filename));
   });
@@ -56,17 +60,21 @@ MainWindow::MainWindow(QWidget *parent)
 #ifdef WIN32
     QString program_path(QCoreApplication::applicationDirPath() + "/cli/realesrgan-ncnn-vulkan.exe");
 #else
-    QString program_path("cli/realesrgan-ncnn-vulkan");
+    QString program_path(QCoreApplication::applicationDirPath() + "cli/realesrgan-ncnn-vulkan");
 #endif
 
     QStringList arguments;
-    arguments << "-i" << m_input_select->path() << "-o" << m_output_select->path();
+    arguments << "-i" << m_input_select->path()
+      << "-o" << m_output_select->path()
+      << "-n" << m_settings_panel->model()
+      << "-s" << m_settings_panel->up_size();
 
     QFile program(program_path);
 
     if (!program.exists()) {
       debugln("CLI doesn't exist");
       debugln(program_path);
+      logln(tr("Missing CLI files"));
       return;
     }
 
