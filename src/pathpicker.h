@@ -25,7 +25,7 @@ public:
 	void set_path(const QString& path) { m_path->setText(path); }
 
 	void run_select_callback() {
-		if (m_select_callback)
+		if (m_select_callback && !m_path->text().isEmpty())
 			m_select_callback(m_path->text());
 	};
 	void set_select_callback(std::function<void(const QString& path)> callback) { m_select_callback = callback; }
