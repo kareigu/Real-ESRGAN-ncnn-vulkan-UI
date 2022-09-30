@@ -24,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
 
   m_message_log = new MessageLog(m_main_view);
   Log::init(m_message_log);
+#ifndef NDEBUG
+  Log::set_log_level(Log::LogLevel::Debug);
+#endif
 
   m_main_view->setLayout(new QVBoxLayout);
   m_main_view->layout()->addWidget(m_path_selects);
