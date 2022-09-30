@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
         .arg(
           QString("%1%2.%3")
             .arg(filename[0])
-            .arg("-1")
+            .arg("_up")
             .arg(filename[1])
         )
     );

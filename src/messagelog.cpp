@@ -1,6 +1,7 @@
 #include "messagelog.h"
 #include <QDateTime>
 #include <QVBoxLayout>
+#include <QScrollBar>
 
 MessageLog::MessageLog(QWidget* parent) : QWidget(parent) {
 	m_message_box = new QTextEdit(this);
@@ -23,6 +24,7 @@ void MessageLog::log(const QString& message) {
 		log_text += message;
 
 	m_message_box->setText(log_text);
+	m_message_box->verticalScrollBar()->setValue(m_message_box->verticalScrollBar()->maximum());
 }
 
 MessageLog::~MessageLog() {
