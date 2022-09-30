@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
   m_main_view->layout()->addWidget(m_message_log);
   setCentralWidget(m_main_view);
 
-  Log::log("Started");
+  logln("Started");
 }
 
 MainWindow::~MainWindow() {

@@ -7,6 +7,13 @@
 #include <QVector>
 #include <QWidget>
 
+#define logln(x) Log::log(x)
+
+#ifndef NDEBUG 
+#define debugln(x) Log::debug(x)
+#else
+#define debugln(x) 
+#endif
 
 class MessageLog : public QWidget {
 	Q_OBJECT
