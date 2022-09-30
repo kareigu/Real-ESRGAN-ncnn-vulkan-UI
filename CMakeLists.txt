@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
         src/mainwindow.h
         src/pathpicker.cpp
         src/pathpicker.h
+        src/messagelog.cpp
+        src/messagelog.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

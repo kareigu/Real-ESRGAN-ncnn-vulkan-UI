@@ -4,7 +4,9 @@
 #include <QMainWindow>
 #include <QPointer>
 #include <QGroupBox>
+#include <QTextEdit>
 
+#include "messagelog.h"
 #include "pathpicker.h"
 
 class MainWindow : public QMainWindow
@@ -24,5 +26,6 @@ private:
 
   QPointer<QGroupBox> m_settings_box = nullptr;
 
+  QPointer<MessageLog> m_message_log = nullptr;
 };
 #endif // MAINWINDOW_H
