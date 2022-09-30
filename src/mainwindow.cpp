@@ -117,6 +117,9 @@ MainWindow::MainWindow(QWidget *parent)
   m_main_controls->layout()->addWidget(m_main_buttons);
 
   m_settings_panel = new SettingsPanel(m_main_view);
+  connect(m_settings_panel, &SettingsPanel::settingsChanged, this, [&]() {
+    m_input_select->run_select_callback();
+  });
 
   m_message_log = new MessageLog(m_main_view);
   Log::init(m_message_log);

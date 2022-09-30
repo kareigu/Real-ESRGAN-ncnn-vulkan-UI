@@ -21,6 +21,7 @@ SettingsPanel::SettingsPanel(QWidget* parent) : QGroupBox(parent) {
 			if (button->isChecked()) {
 				m_model = model;
 				debugln(QString("Set model to %1").arg(model_option_to_string(model)));
+				emit settingsChanged();
 			}
 		});
 
@@ -43,6 +44,7 @@ SettingsPanel::SettingsPanel(QWidget* parent) : QGroupBox(parent) {
 			if (button->isChecked()) {
 				m_size = size;
 				debugln(QString("Set size to %1").arg((int)size));
+				emit settingsChanged();
 			}
 		});
 

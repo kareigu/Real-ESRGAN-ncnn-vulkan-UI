@@ -32,6 +32,9 @@ public:
 	QString up_size() { return QString("%1").arg((int)raw_up_size()); }
 	SizeOptions raw_up_size() { return m_size; }
 
+signals:
+	void settingsChanged();
+
 private:
 	ModelOptions m_model = ModelOptions::RealESR_AnimeVideoV3;
 	SizeOptions m_size = SizeOptions::X4;
