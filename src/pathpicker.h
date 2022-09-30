@@ -1,6 +1,7 @@
 #ifndef PATHPICKER_H
 #define PATHPICKER_H
 
+#include <functional>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPointer>
@@ -21,11 +22,16 @@ public:
 	bool mode() { return m_select_folder; }
 
 	const QString path() const { return m_path->text(); }
+	void set_path(const QString& path) { m_path->setText(path); }
+
+	void set_select_callback(std::function<void(const QString& path)> callback) { m_select_callback = callback; }
 
 private:
 	void m_init();
 
 	bool m_select_folder = false;
+
+	std::function<void(const QString& path)> m_select_callback;
 
 	QPointer<QLabel> m_title = nullptr;
 	QPointer<QLineEdit> m_path = nullptr;

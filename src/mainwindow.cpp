@@ -18,6 +18,22 @@ MainWindow::MainWindow(QWidget *parent)
   m_input_select = new PathPicker(tr("Input"));
   m_output_select = new PathPicker(tr("Output"));
   m_output_select->set_folder_mode();
+  m_input_select->set_select_callback([&](const QString& path) {
+    auto separator = path.lastIndexOf("/");
+    QString folder_path = path.left(separator);
+    QStringList filename = path.right(separator).split(".");
+    m_output_select->set_path(
+      QString("%1/%2")
+        .arg(folder_path)
+        .arg(
+          QString("%1%2.%3")
+            .arg(filename[0])
+            .arg("-1")
+            .arg(filename[1])
+        )
+    );
+  });
+
   m_path_selects->layout()->addWidget(m_input_select);
   m_path_selects->layout()->addWidget(m_output_select);
 

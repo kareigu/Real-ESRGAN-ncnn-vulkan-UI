@@ -22,13 +22,22 @@ void PathPicker::m_init() {
 	m_browse_button->setText(tr("&Browse"));
 
 	connect(m_browse_button, &QPushButton::released, this, [&] {
+		auto current_path = m_path->text();
+
 		auto path = m_select_folder
-			? QFileDialog::getExistingDirectory(this, tr("Select folder"))
-			: QFileDialog::getOpenFileName(this, tr("Select image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
+			? QFileDialog::getExistingDirectory(this, tr("Select folder"), current_path)
+			: QFileDialog::getOpenFileName(this, tr("Select image"), current_path, tr("Image Files (*.png *.jpg *.bmp)"));
 
 		debugln(QString("Path selected: { m_select_folder = %1, path = %2 }").arg(m_select_folder).arg(path));
 
+		if (path.isEmpty())
+			return;
+
 		m_path->setText(path);
+		if (m_select_callback) {
+			debugln("Running select callback");
+			m_select_callback(path);
+		}
 	});
 
 	setLayout(new QHBoxLayout);
