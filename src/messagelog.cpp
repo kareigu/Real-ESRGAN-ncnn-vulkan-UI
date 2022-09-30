@@ -12,6 +12,9 @@ MessageLog::MessageLog(QWidget* parent) : QWidget(parent) {
 }
 
 void MessageLog::log(const QString& message) {
+	if (message.isEmpty())
+		return;
+
 	QDateTime time = QDateTime::currentDateTime();
 	m_messages.append(
 		QString("[%1] %2\n")

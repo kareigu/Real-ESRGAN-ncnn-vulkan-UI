@@ -19,10 +19,12 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/mainwindow.cpp
         src/mainwindow.h
-        src/pathpicker.cpp
-        src/pathpicker.h
         src/messagelog.cpp
         src/messagelog.h
+        src/pathpicker.cpp
+        src/pathpicker.h
+        src/settingspanel.cpp
+        src/settingspanel.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

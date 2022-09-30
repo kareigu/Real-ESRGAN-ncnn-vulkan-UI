@@ -11,8 +11,8 @@
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent) {
 
-  setMinimumSize(QSize(650, 400));
-  setMaximumSize(QSize(750, 400));
+  setMinimumSize(QSize(650, 450));
+  setMaximumSize(QSize(750, 650));
   setWindowTitle("realesrgan-nccn-vulkan");
 
   m_main_view = new QWidget(this);
@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent)
   m_main_controls->layout()->addWidget(m_path_selects);
   m_main_controls->layout()->addWidget(m_main_buttons);
 
-  m_settings_box = new QGroupBox(m_main_view);
+  m_settings_panel = new SettingsPanel(m_main_view);
 
   m_message_log = new MessageLog(m_main_view);
   Log::init(m_message_log);
@@ -118,11 +118,11 @@ MainWindow::MainWindow(QWidget *parent)
 
   m_main_view->setLayout(new QVBoxLayout);
   m_main_view->layout()->addWidget(m_main_controls);
-  m_main_view->layout()->addWidget(m_settings_box);
+  m_main_view->layout()->addWidget(m_settings_panel);
   m_main_view->layout()->addWidget(m_message_log);
   setCentralWidget(m_main_view);
 
-  logln("Started");
+  logln("Ready");
 }
 
 MainWindow::~MainWindow() {

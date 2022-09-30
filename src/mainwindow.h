@@ -10,6 +10,7 @@
 
 #include "messagelog.h"
 #include "pathpicker.h"
+#include "settingspanel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -33,7 +34,7 @@ private:
   QPointer<QPushButton> m_start_button = nullptr;
   QPointer<QPushButton> m_cancel_button = nullptr;
 
-  QPointer<QGroupBox> m_settings_box = nullptr;
+  QPointer<SettingsPanel> m_settings_panel = nullptr;
 
   QPointer<MessageLog> m_message_log = nullptr;
 };
