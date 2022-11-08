@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "palette.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -10,9 +11,17 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent) {
 
-  setMinimumSize(QSize(650, 450));
+  setMinimumSize(QSize(650, 490));
   setMaximumSize(QSize(750, 650));
   setWindowTitle("realesrgan-nccn-vulkan");
+
+
+  m_menu_bar = new QMenuBar(this);
+  m_options_window = new OptionsWindow();
+  m_menu_bar->addAction(tr("&Options"), [&] { m_options_window->show(); });
+  m_about_window = new AboutWindow(this);
+  m_menu_bar->addAction(tr("&About"), [&] { m_about_window->show(); });
+  setMenuBar(m_menu_bar);
 
   m_main_view = new QWidget(this);
 
@@ -45,6 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
   QSize button_size(60, 25);
   m_start_button = new QPushButton(m_main_buttons);
   m_start_button->setText("&Start");
+  m_start_button->setPalette(primary_button_palette());
   m_start_button->setFixedSize(button_size);
   connect(m_start_button, &QPushButton::released, this, [&]() {
     m_start_button->setDisabled(true);
@@ -78,7 +88,7 @@ MainWindow::MainWindow(QWidget* parent)
       m_start_button->setDisabled(false);
       return;
     }
-    
+
     m_cli = new QProcess();
     m_cli->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
 
@@ -139,4 +149,9 @@ MainWindow::MainWindow(QWidget* parent)
   setCentralWidget(m_main_view);
 
   logln("Ready");
+}
+
+void MainWindow::closeEvent(QCloseEvent* event) {
+  m_options_window->close();
+  event->accept();
 }

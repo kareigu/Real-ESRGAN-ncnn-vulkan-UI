@@ -1,14 +1,19 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QCloseEvent>
+#include <QDialog>
 #include <QGroupBox>
 #include <QMainWindow>
+#include <QMenuBar>
 #include <QPointer>
 #include <QProcess>
 #include <QPushButton>
 #include <QTextEdit>
 
+#include "aboutwindow.h"
 #include "messagelog.h"
+#include "optionswindow.h"
 #include "pathpicker.h"
 #include "settingspanel.h"
 
@@ -19,10 +24,16 @@ public:
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() final = default;
 
+  void closeEvent(QCloseEvent* event) override;
+
 private:
   QPointer<QProcess> m_cli = nullptr;
 
   QPointer<QWidget> m_main_view = nullptr;
+
+  QPointer<QMenuBar> m_menu_bar = nullptr;
+  QPointer<AboutWindow> m_about_window = nullptr;
+  QPointer<OptionsWindow> m_options_window = nullptr;
 
   QPointer<QGroupBox> m_main_controls = nullptr;
   QPointer<QWidget> m_path_selects = nullptr;
