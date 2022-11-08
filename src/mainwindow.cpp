@@ -18,7 +18,15 @@ MainWindow::MainWindow(QWidget* parent)
 
   m_menu_bar = new QMenuBar(this);
   m_options_window = new OptionsWindow();
-  m_menu_bar->addAction(tr("&Options"), [&] { m_options_window->show(); });
+  m_menu_bar->addAction(tr("&Options"), [&] {
+    if (m_options_window->isVisible()) {
+      debugln("OptionsWindow visible");
+      m_options_window->activateWindow();
+    } else {
+      debugln("Opening OptionsWindow");
+      m_options_window->show();
+    }
+  });
   m_about_window = new AboutWindow(this);
   m_menu_bar->addAction(tr("&About"), [&] { m_about_window->show(); });
   setMenuBar(m_menu_bar);
