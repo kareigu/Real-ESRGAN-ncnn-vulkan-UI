@@ -26,6 +26,11 @@ public:
 
   void closeEvent(QCloseEvent* event) override;
 
+private slots:
+  void update_output_filepath();
+  void start_processing();
+  void cancel_processing();
+
 private:
   QPointer<QProcess> m_cli = nullptr;
 

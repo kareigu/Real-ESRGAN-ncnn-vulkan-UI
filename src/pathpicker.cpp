@@ -34,10 +34,7 @@ void PathPicker::m_init() {
       return;
 
     m_path->setText(path);
-    if (m_select_callback) {
-      debugln("Running select callback");
-      m_select_callback(path);
-    }
+    emit path_updated();
   });
 
   setLayout(new QHBoxLayout);

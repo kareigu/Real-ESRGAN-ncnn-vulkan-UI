@@ -18,15 +18,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   m_menu_bar = new QMenuBar(this);
   m_options_window = new OptionsWindow();
-  m_menu_bar->addAction(tr("&Options"), [&] {
-    if (m_options_window->isVisible()) {
-      debugln("OptionsWindow visible");
-      m_options_window->activateWindow();
-    } else {
-      debugln("Opening OptionsWindow");
-      m_options_window->show();
-    }
-  });
+  auto options_action = m_menu_bar->addAction(tr("&Options"));
+  connect(options_action, &QAction::triggered, m_options_window, &OptionsWindow::show_window);
   m_about_window = new AboutWindow(this);
   m_menu_bar->addAction(tr("&About"), [&] { m_about_window->show(); });
   setMenuBar(m_menu_bar);
@@ -40,17 +33,9 @@ MainWindow::MainWindow(QWidget* parent)
   m_path_selects->setLayout(new QVBoxLayout);
 
   m_input_select = new PathPicker(tr("Input"));
+  connect(m_input_select, &PathPicker::path_updated, this, &MainWindow::update_output_filepath);
   m_output_select = new PathPicker(tr("Output"));
   m_output_select->set_save_mode();
-  m_input_select->set_select_callback([&](const QString& path) {
-    QFileInfo file_info(path);
-    QDir folder = file_info.dir();
-    QString filename_ext = QString("%1_%2x")
-                                   .arg(m_settings_panel->model(), m_settings_panel->up_size());
-    QString filename = QString("%1_%2.%3")
-                               .arg(file_info.baseName(), filename_ext, file_info.completeSuffix());
-    m_output_select->set_path(folder.filePath(filename));
-  });
 
   m_path_selects->layout()->addWidget(m_input_select);
   m_path_selects->layout()->addWidget(m_output_select);
@@ -64,73 +49,13 @@ MainWindow::MainWindow(QWidget* parent)
   m_start_button->setText("&Start");
   m_start_button->setPalette(primary_button_palette());
   m_start_button->setFixedSize(button_size);
-  connect(m_start_button, &QPushButton::released, this, [&]() {
-    m_start_button->setDisabled(true);
-    m_cancel_button->setDisabled(false);
-    if (m_cli) {
-      debugln("Already running");
-      m_cancel_button->setDisabled(true);
-      m_start_button->setDisabled(false);
-      return;
-    }
-
-#ifdef WIN32
-    QString program_path(QCoreApplication::applicationDirPath() + "/cli/realesrgan-ncnn-vulkan.exe");
-#else
-    QString program_path(QCoreApplication::applicationDirPath() + "cli/realesrgan-ncnn-vulkan");
-#endif
-
-    QStringList arguments;
-    arguments << "-i" << m_input_select->path()
-              << "-o" << m_output_select->path()
-              << "-n" << m_settings_panel->model()
-              << "-s" << m_settings_panel->up_size();
-
-    QFile program(program_path);
-
-    if (!program.exists()) {
-      debugln("CLI doesn't exist");
-      debugln(program_path);
-      logln(tr("Missing CLI files"));
-      m_cancel_button->setDisabled(true);
-      m_start_button->setDisabled(false);
-      return;
-    }
-
-    m_cli = new QProcess();
-    m_cli->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
-
-    connect(m_cli, &QProcess::readyRead, this, [&]() {
-      auto output = QString(m_cli->readAll()).split("\n");
-      for (const auto& line : output)
-        logln(line);
-    });
-
-    connect(m_cli, &QProcess::finished, this, [&]() {
-      logln("Finished");
-      delete m_cli;
-      m_cli = nullptr;
-      m_cancel_button->setDisabled(true);
-      m_start_button->setDisabled(false);
-    });
-
-    m_cli->start(program_path, arguments);
-  });
+  connect(m_start_button, &QPushButton::released, this, &MainWindow::start_processing);
 
   m_cancel_button = new QPushButton(m_main_buttons);
   m_cancel_button->setDisabled(true);
   m_cancel_button->setText("&Cancel");
   m_cancel_button->setFixedSize(button_size);
-  connect(m_cancel_button, &QPushButton::released, this, [&]() {
-    if (!m_cli) {
-      debugln("Not running");
-      return;
-    }
-    m_cli->kill();
-    logln(tr("Cancelled"));
-
-    m_cli = nullptr;
-  });
+  connect(m_cancel_button, &QPushButton::released, this, &MainWindow::cancel_processing);
 
 
   m_main_buttons->layout()->addWidget(m_start_button);
@@ -140,9 +65,7 @@ MainWindow::MainWindow(QWidget* parent)
   m_main_controls->layout()->addWidget(m_main_buttons);
 
   m_settings_panel = new SettingsPanel(m_main_view);
-  connect(m_settings_panel, &SettingsPanel::settingsChanged, this, [&]() {
-    m_input_select->run_select_callback();
-  });
+  connect(m_settings_panel, &SettingsPanel::settingsChanged, this, &MainWindow::update_output_filepath);
 
   m_message_log = new MessageLog(m_main_view);
   Log::init(m_message_log);
@@ -157,6 +80,81 @@ MainWindow::MainWindow(QWidget* parent)
   setCentralWidget(m_main_view);
 
   logln("Ready");
+}
+
+void MainWindow::update_output_filepath() {
+  auto path = m_input_select->path();
+  QFileInfo file_info(path);
+  QDir folder = file_info.dir();
+  QString filename_ext = QString("%1_%2x")
+                                 .arg(m_settings_panel->model(), m_settings_panel->up_size());
+  QString filename = QString("%1_%2.%3")
+                             .arg(file_info.baseName(), filename_ext, file_info.completeSuffix());
+  m_output_select->set_path(folder.filePath(filename));
+}
+
+void MainWindow::start_processing() {
+  m_start_button->setDisabled(true);
+  m_cancel_button->setDisabled(false);
+  if (m_cli) {
+    debugln("Already running");
+    m_cancel_button->setDisabled(true);
+    m_start_button->setDisabled(false);
+    return;
+  }
+
+#ifdef WIN32
+  QString program_path(QCoreApplication::applicationDirPath() + "/cli/realesrgan-ncnn-vulkan.exe");
+#else
+  QString program_path(QCoreApplication::applicationDirPath() + "cli/realesrgan-ncnn-vulkan");
+#endif
+
+  QStringList arguments;
+  arguments << "-i" << m_input_select->path()
+            << "-o" << m_output_select->path()
+            << "-n" << m_settings_panel->model()
+            << "-s" << m_settings_panel->up_size();
+
+  QFile program(program_path);
+
+  if (!program.exists()) {
+    debugln("CLI doesn't exist");
+    debugln(program_path);
+    logln(tr("Missing CLI files"));
+    m_cancel_button->setDisabled(true);
+    m_start_button->setDisabled(false);
+    return;
+  }
+
+  m_cli = new QProcess();
+  m_cli->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
+
+  connect(m_cli, &QProcess::readyRead, this, [&]() {
+    auto output = QString(m_cli->readAll()).split("\n");
+    for (const auto& line : output)
+      logln(line);
+  });
+
+  connect(m_cli, &QProcess::finished, this, [&]() {
+    logln("Finished");
+    delete m_cli;
+    m_cli.clear();
+    m_cancel_button->setDisabled(true);
+    m_start_button->setDisabled(false);
+  });
+
+  m_cli->start(program_path, arguments);
+}
+
+void MainWindow::cancel_processing() {
+  if (!m_cli) {
+    debugln("Not running");
+    return;
+  }
+  m_cli->kill();
+  logln(tr("Cancelled"));
+
+  m_cli.clear();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {

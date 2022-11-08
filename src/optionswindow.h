@@ -48,6 +48,7 @@ public slots:
   void handle_close();
   void handle_save();
   void handle_defaults();
+  void show_window();
 
 private:
   QPointer<FetchingOptions> m_fetching_options = nullptr;

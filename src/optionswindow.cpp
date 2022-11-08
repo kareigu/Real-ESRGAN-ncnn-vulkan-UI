@@ -59,6 +59,16 @@ void OptionsWindow::handle_defaults() {
   debugln("Restored settings to default (not)");
 }
 
+void OptionsWindow::show_window() {
+  if (isVisible()) {
+    debugln("OptionsWindow visible");
+    activateWindow();
+  } else {
+    debugln("Opening OptionsWindow");
+    show();
+  }
+}
+
 FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
   setTitle("Downloading");
   setLayout(new QVBoxLayout);

@@ -24,18 +24,13 @@ public:
   [[nodiscard]] QString path() const { return m_path->text(); }
   void set_path(const QString& path) { m_path->setText(path); }
 
-  void run_select_callback() {
-    if (m_select_callback && !m_path->text().isEmpty())
-      m_select_callback(m_path->text());
-  };
-  void set_select_callback(std::function<void(const QString& path)> callback) { m_select_callback = callback; }
+signals:
+  void path_updated();
 
 private:
   void m_init();
 
   bool m_save = false;
-
-  std::function<void(const QString& path)> m_select_callback;
 
   QPointer<QLabel> m_title = nullptr;
   QPointer<QLineEdit> m_path = nullptr;
