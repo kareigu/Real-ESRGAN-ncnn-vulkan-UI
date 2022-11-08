@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget* parent)
   m_start_button->setText("&Start");
   m_start_button->setPalette(primary_button_palette());
   m_start_button->setFixedSize(button_size);
+  m_start_button->setDisabled(true);
   connect(m_start_button, &QPushButton::released, this, &MainWindow::start_processing);
 
   m_cancel_button = new QPushButton(m_main_buttons);
@@ -84,6 +85,11 @@ MainWindow::MainWindow(QWidget* parent)
 
 void MainWindow::update_output_filepath() {
   auto path = m_input_select->path();
+  if (path.isEmpty()) {
+    m_start_button->setDisabled(true);
+    return;
+  }
+
   QFileInfo file_info(path);
   QDir folder = file_info.dir();
   QString filename_ext = QString("%1_%2x")
@@ -91,6 +97,7 @@ void MainWindow::update_output_filepath() {
   QString filename = QString("%1_%2.%3")
                              .arg(file_info.baseName(), filename_ext, file_info.completeSuffix());
   m_output_select->set_path(folder.filePath(filename));
+  m_start_button->setDisabled(false);
 }
 
 void MainWindow::start_processing() {
