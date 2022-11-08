@@ -1,15 +1,14 @@
 #include "mainwindow.h"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QDir>
 #include <QLineEdit>
 #include <QThread>
+#include <QVBoxLayout>
 
-MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent) {
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent) {
 
   setMinimumSize(QSize(650, 450));
   setMaximumSize(QSize(750, 650));
@@ -30,12 +29,9 @@ MainWindow::MainWindow(QWidget *parent)
     QFileInfo file_info(path);
     QDir folder = file_info.dir();
     QString filename_ext = QString("%1_%2x")
-      .arg(m_settings_panel->model())
-      .arg(m_settings_panel->up_size());
+                                   .arg(m_settings_panel->model(), m_settings_panel->up_size());
     QString filename = QString("%1_%2.%3")
-      .arg(file_info.baseName())
-      .arg(filename_ext)
-      .arg(file_info.completeSuffix());
+                               .arg(file_info.baseName(), filename_ext, file_info.completeSuffix());
     m_output_select->set_path(folder.filePath(filename));
   });
 
@@ -65,9 +61,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     QStringList arguments;
     arguments << "-i" << m_input_select->path()
-      << "-o" << m_output_select->path()
-      << "-n" << m_settings_panel->model()
-      << "-s" << m_settings_panel->up_size();
+              << "-o" << m_output_select->path()
+              << "-n" << m_settings_panel->model()
+              << "-s" << m_settings_panel->up_size();
 
     QFile program(program_path);
 
@@ -109,7 +105,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_cli = nullptr;
   });
 
-  
+
   m_main_buttons->layout()->addWidget(m_start_button);
   m_main_buttons->layout()->addWidget(m_cancel_button);
 
@@ -135,8 +131,3 @@ MainWindow::MainWindow(QWidget *parent)
 
   logln("Ready");
 }
-
-MainWindow::~MainWindow() {
-
-}
-

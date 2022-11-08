@@ -1,9 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QGroupBox>
 #include <QMainWindow>
 #include <QPointer>
-#include <QGroupBox>
 #include <QProcess>
 #include <QPushButton>
 #include <QTextEdit>
@@ -12,13 +12,12 @@
 #include "pathpicker.h"
 #include "settingspanel.h"
 
-class MainWindow : public QMainWindow
-{
+class MainWindow final : public QMainWindow {
   Q_OBJECT
 
 public:
-  MainWindow(QWidget *parent = nullptr);
-  ~MainWindow();
+  explicit MainWindow(QWidget* parent = nullptr);
+  ~MainWindow() final = default;
 
 private:
   QPointer<QProcess> m_cli = nullptr;
@@ -38,4 +37,4 @@ private:
 
   QPointer<MessageLog> m_message_log = nullptr;
 };
-#endif // MAINWINDOW_H
+#endif// MAINWINDOW_H
