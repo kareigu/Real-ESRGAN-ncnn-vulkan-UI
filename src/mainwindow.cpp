@@ -47,11 +47,14 @@ MainWindow::MainWindow(QWidget* parent)
   m_start_button->setText("&Start");
   m_start_button->setFixedSize(button_size);
   connect(m_start_button, &QPushButton::released, this, [&]() {
+    m_start_button->setDisabled(true);
+    m_cancel_button->setDisabled(false);
     if (m_cli) {
       debugln("Already running");
+      m_cancel_button->setDisabled(true);
+      m_start_button->setDisabled(false);
       return;
     }
-    m_cli = new QProcess();
 
 #ifdef WIN32
     QString program_path(QCoreApplication::applicationDirPath() + "/cli/realesrgan-ncnn-vulkan.exe");
@@ -71,9 +74,12 @@ MainWindow::MainWindow(QWidget* parent)
       debugln("CLI doesn't exist");
       debugln(program_path);
       logln(tr("Missing CLI files"));
+      m_cancel_button->setDisabled(true);
+      m_start_button->setDisabled(false);
       return;
     }
-
+    
+    m_cli = new QProcess();
     m_cli->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
 
     connect(m_cli, &QProcess::readyRead, this, [&]() {
@@ -86,12 +92,15 @@ MainWindow::MainWindow(QWidget* parent)
       logln("Finished");
       delete m_cli;
       m_cli = nullptr;
+      m_cancel_button->setDisabled(true);
+      m_start_button->setDisabled(false);
     });
 
     m_cli->start(program_path, arguments);
   });
 
   m_cancel_button = new QPushButton(m_main_buttons);
+  m_cancel_button->setDisabled(true);
   m_cancel_button->setText("&Cancel");
   m_cancel_button->setFixedSize(button_size);
   connect(m_cancel_button, &QPushButton::released, this, [&]() {
