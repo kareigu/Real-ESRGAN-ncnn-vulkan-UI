@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   setMinimumSize(QSize(650, 490));
   setMaximumSize(QSize(750, 650));
-  setWindowTitle("realesrgan-nccn-vulkan");
+  setWindowTitle("Real-ESRGAN-ncnn-Vulkan");
 
 
   m_menu_bar = new QMenuBar(this);
