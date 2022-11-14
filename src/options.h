@@ -1,6 +1,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <QApplication>
+#include <QSettings>
 #include <QString>
 
 class Options {
@@ -18,6 +20,7 @@ public:
   static constexpr bool default_generate_filename = true;
 
 private:
+  static inline QSettings m_create_settings() { return {QSettings::Format::IniFormat, QSettings::Scope::UserScope, QApplication::organizationName(), QApplication::applicationName()}; }
 };
 
 
