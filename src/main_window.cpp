@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "main_window.h"
 #include "palette.h"
 #include <QCoreApplication>
 #include <QDir>
@@ -66,7 +66,7 @@ MainWindow::MainWindow(QWidget* parent)
   m_main_controls->layout()->addWidget(m_main_buttons);
 
   m_settings_panel = new SettingsPanel(m_main_view);
-  connect(m_settings_panel, &SettingsPanel::settingsChanged, this, &MainWindow::update_output_filepath);
+  connect(m_settings_panel, &SettingsPanel::settings_changed, this, &MainWindow::update_output_filepath);
 
   m_message_log = new MessageLog(m_main_view);
   Log::init(m_message_log);

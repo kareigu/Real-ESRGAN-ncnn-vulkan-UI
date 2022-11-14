@@ -1,5 +1,5 @@
-#include "settingspanel.h"
-#include "messagelog.h"
+#include "settings_panel.h"
+#include "message_log.h"
 #include <QButtonGroup>
 #include <QVBoxLayout>
 
@@ -21,7 +21,7 @@ SettingsPanel::SettingsPanel(QWidget* parent) : QGroupBox(parent) {
       if (button->isChecked()) {
         m_model = model;
         debugln(QString("Set model to %1").arg(model_option_to_string(model)));
-        emit settingsChanged();
+        emit settings_changed();
       }
     });
 
@@ -44,7 +44,7 @@ SettingsPanel::SettingsPanel(QWidget* parent) : QGroupBox(parent) {
       if (button->isChecked()) {
         m_size = size;
         debugln(QString("Set size to %1").arg((int) size));
-        emit settingsChanged();
+        emit settings_changed();
       }
     });
 

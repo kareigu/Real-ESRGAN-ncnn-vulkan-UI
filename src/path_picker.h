@@ -1,5 +1,5 @@
-#ifndef PATHPICKER_H
-#define PATHPICKER_H
+#ifndef PATH_PICKER_H
+#define PATH_PICKER_H
 
 #include <QLabel>
 #include <QLineEdit>
@@ -38,4 +38,4 @@ private:
 };
 
 
-#endif
+#endif// PATH_PICKER_H

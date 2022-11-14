@@ -1,5 +1,5 @@
-#ifndef MESSAGELOG_H
-#define MESSAGELOG_H
+#ifndef MESSAGE_LOG_H
+#define MESSAGE_LOG_H
 
 #include <QPointer>
 #include <QString>
@@ -75,4 +75,4 @@ private:
   inline static LogLevel m_log_level = LogLevel::Info;
 };
 
-#endif
+#endif// MESSAGE_LOG_H

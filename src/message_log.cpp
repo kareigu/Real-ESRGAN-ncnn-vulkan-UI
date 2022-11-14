@@ -1,4 +1,4 @@
-#include "messagelog.h"
+#include "message_log.h"
 #include <QDateTime>
 #include <QScrollBar>
 #include <QVBoxLayout>

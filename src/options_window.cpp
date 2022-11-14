@@ -1,5 +1,5 @@
-#include "optionswindow.h"
-#include "messagelog.h"
+#include "options_window.h"
+#include "message_log.h"
 #include "palette.h"
 #include <QBoxLayout>
 #include <QGroupBox>

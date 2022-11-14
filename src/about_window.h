@@ -1,5 +1,5 @@
-#ifndef ABOUTWINDOW_H
-#define ABOUTWINDOW_H
+#ifndef ABOUT_WINDOW_H
+#define ABOUT_WINDOW_H
 
 #include <QDialog>
 #include <QPointer>
@@ -17,4 +17,4 @@ private:
   QPointer<QTextBrowser> m_about_text = nullptr;
 };
 
-#endif// ABOUTWINDOW_H
+#endif// ABOUT_WINDOW_H

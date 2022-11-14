@@ -1,5 +1,5 @@
-#ifndef SETTINGSPANEL_H
-#define SETTINGSPANEL_H
+#ifndef SETTINGS_PANEL_H
+#define SETTINGS_PANEL_H
 
 #include <QGroupBox>
 #include <QPointer>
@@ -36,7 +36,7 @@ public:
   SizeOptions raw_up_size() { return m_size; }
 
 signals:
-  void settingsChanged();
+  void settings_changed();
 
 private:
   ModelOptions m_model = ModelOptions::RealESR_AnimeVideoV3;
@@ -47,4 +47,4 @@ private:
 };
 
 
-#endif
+#endif// SETTINGS_PANEL_H

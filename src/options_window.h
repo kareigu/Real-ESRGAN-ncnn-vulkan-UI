@@ -1,5 +1,5 @@
-#ifndef OPTIONSWINDOW_H
-#define OPTIONSWINDOW_H
+#ifndef OPTIONS_WINDOW_H
+#define OPTIONS_WINDOW_H
 
 #include <QCheckBox>
 #include <QGroupBox>
@@ -30,7 +30,7 @@ class GeneralOptions final : public QGroupBox {
   friend class OptionsWindow;
 
 public:
-  GeneralOptions(QWidget* parent);
+  explicit GeneralOptions(QWidget* parent);
   ~GeneralOptions() final = default;
 
 private:
@@ -59,4 +59,4 @@ private:
   QPointer<QPushButton> m_defaults_button = nullptr;
 };
 
-#endif// OPTIONSWINDOW_H
+#endif// OPTIONS_WINDOW_H

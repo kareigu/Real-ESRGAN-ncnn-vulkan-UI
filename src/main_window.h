@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include <QCloseEvent>
 #include <QDialog>
@@ -11,11 +11,11 @@
 #include <QPushButton>
 #include <QTextEdit>
 
-#include "aboutwindow.h"
-#include "messagelog.h"
-#include "optionswindow.h"
-#include "pathpicker.h"
-#include "settingspanel.h"
+#include "about_window.h"
+#include "message_log.h"
+#include "options_window.h"
+#include "path_picker.h"
+#include "settings_panel.h"
 
 class MainWindow final : public QMainWindow {
   Q_OBJECT
@@ -53,4 +53,4 @@ private:
 
   QPointer<MessageLog> m_message_log = nullptr;
 };
-#endif// MAINWINDOW_H
+#endif// MAIN_WINDOW_H

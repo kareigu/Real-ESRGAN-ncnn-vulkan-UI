@@ -1,8 +1,8 @@
-#include "pathpicker.h"
+#include "path_picker.h"
 #include <QFileDialog>
 #include <QHBoxLayout>
 
-#include "messagelog.h"
+#include "message_log.h"
 
 PathPicker::PathPicker(const QString& title, QWidget* parent)
     : QWidget(parent) {

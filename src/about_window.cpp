@@ -1,5 +1,5 @@
-#include "aboutwindow.h"
-#include "messagelog.h"
+#include "about_window.h"
+#include "message_log.h"
 #include <QFile>
 #include <QVBoxLayout>
 

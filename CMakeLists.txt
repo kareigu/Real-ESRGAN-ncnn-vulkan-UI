@@ -17,24 +17,22 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         src/main.cpp
-        src/mainwindow.cpp
-        src/mainwindow.h
-        src/messagelog.cpp
-        src/messagelog.h
-        src/pathpicker.cpp
-        src/pathpicker.h
-        src/settingspanel.cpp
-        src/settingspanel.h
-        src/aboutwindow.cpp
-        src/optionswindow.cpp
-        src/optionswindow.h
-        resources/resources.qrc
+        src/main_window.cpp
+        src/message_log.cpp
+        src/path_picker.cpp
+        src/settings_panel.cpp
+        src/about_window.cpp
+        src/options_window.cpp
         )
+
+set(PROJECT_RESOURCES
+        resources/resources.qrc)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(realesrgan-ncnn-vulkan-ui
             MANUAL_FINALIZATION
             ${PROJECT_SOURCES}
+            ${PROJECT_RESOURCES}
             )
     # Define target properties for Android with Qt 6 as:
     #    set_property(TARGET realesrgan-ncnn-vulkan-ui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -44,12 +42,14 @@ else ()
     if (ANDROID)
         add_library(realesrgan-ncnn-vulkan-ui SHARED
                 ${PROJECT_SOURCES}
+                ${PROJECT_RESOURCES}
                 )
         # Define properties for Android with Qt 5 after find_package() calls as:
         #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else ()
         add_executable(realesrgan-ncnn-vulkan-ui
                 ${PROJECT_SOURCES}
+                ${PROJECT_RESOURCES}
                 )
     endif ()
 endif ()
