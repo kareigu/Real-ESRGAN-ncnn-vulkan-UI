@@ -23,7 +23,7 @@ set(PROJECT_SOURCES
         src/settings_panel.cpp
         src/about_window.cpp
         src/options_window.cpp
-        )
+        src/options.cpp src/options.h)
 
 set(PROJECT_RESOURCES
         resources/resources.qrc)

@@ -1,6 +1,7 @@
 #ifndef OPTIONS_WINDOW_H
 #define OPTIONS_WINDOW_H
 
+#include "options.h"
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QLineEdit>

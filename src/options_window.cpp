@@ -16,6 +16,9 @@ OptionsWindow::OptionsWindow() : QWidget() {
   auto settings_container = new QWidget(this);
   settings_container->setLayout(new QVBoxLayout);
 
+  // TODO: Implement dirty settings handling
+  //       Wire up events to both options that get notified when changes happen
+  //       Should compare to previously saved settings
   m_fetching_options = new FetchingOptions(settings_container);
   settings_container->layout()->addWidget(m_fetching_options);
   m_general_options = new GeneralOptions(settings_container);
@@ -32,7 +35,8 @@ OptionsWindow::OptionsWindow() : QWidget() {
   m_save_button = new QPushButton(button_container);
   m_save_button->setText("Save");
   m_save_button->setPalette(primary_button_palette());
-  m_save_button->setEnabled(false);
+  // FIXME: Uncomment this once dirty settings handling is implemented
+  // m_save_button->setEnabled(false);
   connect(m_save_button, &QPushButton::released, this, &OptionsWindow::handle_save);
 
   m_defaults_button = new QPushButton(button_container);
@@ -55,11 +59,20 @@ void OptionsWindow::handle_close() {
 void OptionsWindow::handle_save() {
   // TODO: Implement saving the settings
   debugln("Saved settings (not)");
+  Options::set_fetch_url(m_fetching_options->m_fetch_url->text());
+  debugln("Saved fetch_url");
+  Options::set_auto_rename(m_general_options->m_auto_rename_check->isChecked());
+  debugln("Saved auto_rename");
+  Options::set_generate_filename(m_general_options->m_generate_output_name_check->isChecked());
+  debugln("Save generate_filename");
 }
 
 void OptionsWindow::handle_defaults() {
   // TODO: Implement resetting settings to default
   debugln("Restored settings to default (not)");
+  m_fetching_options->m_fetch_url->setText(Options::default_fetch_url);
+  m_general_options->m_auto_rename_check->setChecked(Options::default_auto_rename);
+  m_general_options->m_generate_output_name_check->setChecked(Options::default_generate_filename);
 }
 
 void OptionsWindow::show_window() {
@@ -80,7 +93,7 @@ FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
   auto fetch_url_label = new QLabel(fetch_url_container);
   fetch_url_label->setText("Download URL: ");
   m_fetch_url = new QLineEdit(fetch_url_container);
-  m_fetch_url->setText("https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip");
+  m_fetch_url->setText(Options::fetch_url());
   fetch_url_container->layout()->addWidget(fetch_url_label);
   fetch_url_container->layout()->addWidget(m_fetch_url);
 
@@ -104,6 +117,7 @@ GeneralOptions::GeneralOptions(QWidget* parent) : QGroupBox(parent) {
   auto auto_rename_check_label = new QLabel(auto_rename_check_container);
   auto_rename_check_label->setText("Automatically rename output file: ");
   m_auto_rename_check = new QCheckBox(auto_rename_check_container);
+  m_auto_rename_check->setChecked(Options::auto_rename());
   auto_rename_check_container->layout()->addWidget(auto_rename_check_label);
   auto_rename_check_container->layout()->addWidget(m_auto_rename_check);
 
@@ -114,6 +128,7 @@ GeneralOptions::GeneralOptions(QWidget* parent) : QGroupBox(parent) {
   auto generate_output_name_check_label = new QLabel(generate_output_name_check_container);
   generate_output_name_check_label->setText("Automatically generate output filename: ");
   m_generate_output_name_check = new QCheckBox(generate_output_name_check_container);
+  m_generate_output_name_check->setChecked(Options::generate_filename());
   generate_output_name_check_container->layout()->addWidget(generate_output_name_check_label);
   generate_output_name_check_container->layout()->addWidget(m_generate_output_name_check);
 
