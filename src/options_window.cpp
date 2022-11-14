@@ -48,14 +48,17 @@ OptionsWindow::OptionsWindow() : QWidget() {
 }
 
 void OptionsWindow::handle_close() {
+  // FIXME: Check for dirty settings and ask to save before closing
   close();
 }
 
 void OptionsWindow::handle_save() {
+  // TODO: Implement saving the settings
   debugln("Saved settings (not)");
 }
 
 void OptionsWindow::handle_defaults() {
+  // TODO: Implement resetting settings to default
   debugln("Restored settings to default (not)");
 }
 
