@@ -55,8 +55,7 @@ public:
 
   static void set_log_level(LogLevel log_level) {
     m_log_level = log_level;
-    debug(
-            QString("Set logging level to %1").arg(m_log_level_to_name(log_level)));
+    debug(QString("Set logging level to %1").arg(m_log_level_to_name(log_level)));
   }
 
 private:
