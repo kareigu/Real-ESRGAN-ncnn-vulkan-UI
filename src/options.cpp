@@ -1,8 +1,8 @@
 #include "options.h"
 
-constexpr auto KEY_FETCH_URL = "fetch_url";
-constexpr auto KEY_AUTO_RENAME = "auto_rename";
-constexpr auto KEY_GENERATE_FILENAME = "generate_filename";
+static constexpr auto KEY_FETCH_URL = "fetch_url";
+static constexpr auto KEY_AUTO_RENAME = "auto_rename";
+static constexpr auto KEY_GENERATE_FILENAME = "generate_filename";
 
 QString Options::fetch_url() {
   return m_create_settings().value(KEY_FETCH_URL, QVariant(default_fetch_url)).toString();
