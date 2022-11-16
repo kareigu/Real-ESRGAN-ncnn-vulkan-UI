@@ -1,6 +1,7 @@
 #ifndef OPTIONS_WINDOW_H
 #define OPTIONS_WINDOW_H
 
+#include "download_manager.h"
 #include "options.h"
 #include <QCheckBox>
 #include <QGroupBox>
@@ -21,9 +22,15 @@ public:
   explicit FetchingOptions(QWidget* parent);
   ~FetchingOptions() final = default;
 
+private slots:
+  void redownload_files();
+  void download_complete();
+
 private:
   QPointer<QLineEdit> m_fetch_url = nullptr;
   QPointer<QPushButton> m_redownload_button = nullptr;
+
+  QPointer<DownloadManager> m_download_manager = nullptr;
 };
 
 class GeneralOptions final : public QGroupBox {

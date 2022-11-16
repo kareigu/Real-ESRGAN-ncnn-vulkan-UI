@@ -102,10 +102,29 @@ FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
   m_redownload_button = new QPushButton(this);
   m_redownload_button->setText("Redownload");
   m_redownload_button->setFixedWidth(80);
-  connect(m_redownload_button, &QPushButton::released, this, [] { debugln("Redownloading CLI (not)"); });
+  connect(m_redownload_button, &QPushButton::released, this, &FetchingOptions::redownload_files);
   buttons_container->layout()->addWidget(m_redownload_button);
   layout()->addWidget(fetch_url_container);
   layout()->addWidget(buttons_container);
+}
+
+void FetchingOptions::redownload_files() {
+  delete m_download_manager;
+  m_download_manager = new DownloadManager(Options::fetch_url(), this);
+
+  connect(m_download_manager, &DownloadManager::download_complete, this, &FetchingOptions::download_complete);
+  m_download_manager->start_download();
+}
+
+void FetchingOptions::download_complete() {
+  if (!m_download_manager) {
+    debugln("No download manager present");
+    return;
+  }
+
+  // TODO: Do something with the downloaded bytes
+  auto info = QString("Download complete - %1 bytes").arg(m_download_manager->downloaded_bytes_count());
+  logln(info);
 }
 
 GeneralOptions::GeneralOptions(QWidget* parent) : QGroupBox(parent) {
