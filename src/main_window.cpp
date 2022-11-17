@@ -85,7 +85,7 @@ MainWindow::MainWindow(QWidget* parent)
 }
 
 void MainWindow::update_output_filepath() {
-  if (!Options::auto_rename()) {
+  if (!Options::auto_set_output()) {
     debugln("Skipping automatic renaming");
     return;
   }

@@ -42,7 +42,7 @@ public:
   ~GeneralOptions() final = default;
 
 private:
-  QPointer<QCheckBox> m_auto_rename_check = nullptr;
+  QPointer<QCheckBox> m_auto_set_output_check = nullptr;
   QPointer<QCheckBox> m_generate_output_name_check = nullptr;
 };
 

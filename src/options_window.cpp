@@ -61,8 +61,8 @@ void OptionsWindow::handle_save() {
   debugln("Saved settings (not)");
   Options::set_fetch_url(m_fetching_options->m_fetch_url->text());
   debugln("Saved fetch_url");
-  Options::set_auto_rename(m_general_options->m_auto_rename_check->isChecked());
-  debugln("Saved auto_rename");
+  Options::set_auto_set_output(m_general_options->m_auto_set_output_check->isChecked());
+  debugln("Saved auto_set_output");
   Options::set_generate_filename(m_general_options->m_generate_output_name_check->isChecked());
   debugln("Save generate_filename");
 }
@@ -71,7 +71,7 @@ void OptionsWindow::handle_defaults() {
   // TODO: Implement resetting settings to default
   debugln("Restored settings to default (not)");
   m_fetching_options->m_fetch_url->setText(Options::default_fetch_url);
-  m_general_options->m_auto_rename_check->setChecked(Options::default_auto_rename);
+  m_general_options->m_auto_set_output_check->setChecked(Options::default_auto_set_output);
   m_general_options->m_generate_output_name_check->setChecked(Options::default_generate_filename);
 }
 
@@ -131,16 +131,16 @@ GeneralOptions::GeneralOptions(QWidget* parent) : QGroupBox(parent) {
   setTitle("General");
   setLayout(new QVBoxLayout);
 
-  auto auto_rename_check_container = new QWidget(this);
-  auto_rename_check_container->setLayout(new QHBoxLayout);
-  auto auto_rename_check_label = new QLabel(auto_rename_check_container);
-  auto_rename_check_label->setText("Automatically rename output file: ");
-  m_auto_rename_check = new QCheckBox(auto_rename_check_container);
-  m_auto_rename_check->setChecked(Options::auto_rename());
-  auto_rename_check_container->layout()->addWidget(auto_rename_check_label);
-  auto_rename_check_container->layout()->addWidget(m_auto_rename_check);
+  auto auto_set_output_container = new QWidget(this);
+  auto_set_output_container->setLayout(new QHBoxLayout);
+  auto auto_set_output_check_label = new QLabel(auto_set_output_container);
+  auto_set_output_check_label->setText("Automatically set output filepath: ");
+  m_auto_set_output_check = new QCheckBox(auto_set_output_container);
+  m_auto_set_output_check->setChecked(Options::auto_set_output());
+  auto_set_output_container->layout()->addWidget(auto_set_output_check_label);
+  auto_set_output_container->layout()->addWidget(m_auto_set_output_check);
 
-  layout()->addWidget(auto_rename_check_container);
+  layout()->addWidget(auto_set_output_container);
 
   auto generate_output_name_check_container = new QWidget(this);
   generate_output_name_check_container->setLayout(new QHBoxLayout);

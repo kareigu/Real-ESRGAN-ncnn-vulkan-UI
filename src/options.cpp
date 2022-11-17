@@ -1,7 +1,7 @@
 #include "options.h"
 
 static constexpr auto KEY_FETCH_URL = "fetch_url";
-static constexpr auto KEY_AUTO_RENAME = "auto_rename";
+static constexpr auto KEY_AUTO_SET_OUTPUT = "auto_set_output";
 static constexpr auto KEY_GENERATE_FILENAME = "generate_filename";
 static constexpr auto KEY_CLI_LOCATION = "cli_location";
 
@@ -14,13 +14,13 @@ void Options::set_fetch_url(const QString& new_url) {
   settings.setValue(KEY_FETCH_URL, QVariant(new_url));
 }
 
-bool Options::auto_rename() {
-  return m_create_settings().value(KEY_AUTO_RENAME, QVariant(default_auto_rename)).toBool();
+bool Options::auto_set_output() {
+  return m_create_settings().value(KEY_AUTO_SET_OUTPUT, QVariant(default_auto_set_output)).toBool();
 }
 
-void Options::set_auto_rename(bool auto_rename) {
+void Options::set_auto_set_output(bool auto_rename) {
   auto settings = m_create_settings();
-  settings.setValue(KEY_AUTO_RENAME, QVariant(auto_rename));
+  settings.setValue(KEY_AUTO_SET_OUTPUT, QVariant(auto_rename));
 }
 
 bool Options::generate_filename() {
