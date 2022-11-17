@@ -1,5 +1,5 @@
 <div style="text-align: center; width: 100%">
-<h2>Qt6 UI for <a href="https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan">Real-ESRGAN-ncnn-Vulkan</a></h2>  
+<h3>Qt6 UI for <a href="https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan">Real-ESRGAN-ncnn-Vulkan</a></h3>  
 
 <div style="word-wrap: break-word; width: 100%">
 BSD 2-Clause License
@@ -41,6 +41,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </div>
 
 <p>Source available on <a href="https://github.com/kareigu/Real-ESRGAN-ncnn-vulkan-UI">GitHub</a></p>
-<h2>Qt licensed under the GPL</h2>
+<p><b>Qt licensed under the GPL</b></p>
 
 </div>
