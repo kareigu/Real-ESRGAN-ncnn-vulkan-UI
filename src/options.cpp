@@ -3,6 +3,7 @@
 static constexpr auto KEY_FETCH_URL = "fetch_url";
 static constexpr auto KEY_AUTO_RENAME = "auto_rename";
 static constexpr auto KEY_GENERATE_FILENAME = "generate_filename";
+static constexpr auto KEY_CLI_LOCATION = "cli_location";
 
 QString Options::fetch_url() {
   return m_create_settings().value(KEY_FETCH_URL, QVariant(default_fetch_url)).toString();
@@ -30,4 +31,13 @@ bool Options::generate_filename() {
 void Options::set_generate_filename(bool generate_filename) {
   auto settings = m_create_settings();
   settings.setValue(KEY_GENERATE_FILENAME, QVariant(generate_filename));
+}
+
+QString Options::cli_location() {
+  return m_create_settings().value(KEY_CLI_LOCATION, QVariant(default_cli_location())).toString();
+}
+
+void Options::set_cli_location(const QString& new_location) {
+  auto settings = m_create_settings();
+  settings.setValue(KEY_CLI_LOCATION, QVariant(new_location));
 }

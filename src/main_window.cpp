@@ -111,9 +111,9 @@ void MainWindow::start_processing() {
   }
 
 #ifdef WIN32
-  QString program_path(QCoreApplication::applicationDirPath() + "/cli/realesrgan-ncnn-vulkan.exe");
+  QString program_path(Options::cli_location() + "/realesrgan-ncnn-vulkan.exe");
 #else
-  QString program_path(QCoreApplication::applicationDirPath() + "cli/realesrgan-ncnn-vulkan");
+  QString program_path(Options::cli_location() + "/realesrgan-ncnn-vulkan");
 #endif
 
   QStringList arguments;
