@@ -57,22 +57,23 @@ void OptionsWindow::handle_close() {
 }
 
 void OptionsWindow::handle_save() {
-  // TODO: Implement saving the settings
-  debugln("Saved settings (not)");
   Options::set_fetch_url(m_fetching_options->m_fetch_url->text());
   debugln("Saved fetch_url");
+  Options::set_cli_location(m_fetching_options->m_cli_location->path());
+  debugln("Saved cli_location");
   Options::set_auto_set_output(m_general_options->m_auto_set_output_check->isChecked());
   debugln("Saved auto_set_output");
   Options::set_generate_filename(m_general_options->m_generate_output_name_check->isChecked());
   debugln("Save generate_filename");
+  debugln("Saved settings");
 }
 
 void OptionsWindow::handle_defaults() {
-  // TODO: Implement resetting settings to default
-  debugln("Restored settings to default (not)");
   m_fetching_options->m_fetch_url->setText(Options::default_fetch_url);
+  m_fetching_options->m_cli_location->set_path(Options::default_cli_location());
   m_general_options->m_auto_set_output_check->setChecked(Options::default_auto_set_output);
   m_general_options->m_generate_output_name_check->setChecked(Options::default_generate_filename);
+  debugln("Restored settings to default");
 }
 
 void OptionsWindow::show_window() {
@@ -96,6 +97,12 @@ FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
   m_fetch_url->setText(Options::fetch_url());
   fetch_url_container->layout()->addWidget(fetch_url_label);
   fetch_url_container->layout()->addWidget(m_fetch_url);
+  layout()->addWidget(fetch_url_container);
+
+  m_cli_location = new PathPicker(tr("CLI files location"), this);
+  m_cli_location->set_path(Options::cli_location());
+  m_cli_location->set_folder_mode();
+  layout()->addWidget(m_cli_location);
 
   auto buttons_container = new QWidget(this);
   buttons_container->setLayout(new QHBoxLayout);
@@ -104,7 +111,6 @@ FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
   m_redownload_button->setFixedWidth(80);
   connect(m_redownload_button, &QPushButton::released, this, &FetchingOptions::redownload_files);
   buttons_container->layout()->addWidget(m_redownload_button);
-  layout()->addWidget(fetch_url_container);
   layout()->addWidget(buttons_container);
 }
 

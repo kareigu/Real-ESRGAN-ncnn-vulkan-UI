@@ -3,6 +3,7 @@
 
 #include "download_manager.h"
 #include "options.h"
+#include "path_picker.h"
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QLineEdit>
@@ -29,6 +30,7 @@ private slots:
 private:
   QPointer<QLineEdit> m_fetch_url = nullptr;
   QPointer<QPushButton> m_redownload_button = nullptr;
+  QPointer<PathPicker> m_cli_location = nullptr;
 
   QPointer<DownloadManager> m_download_manager = nullptr;
 };
