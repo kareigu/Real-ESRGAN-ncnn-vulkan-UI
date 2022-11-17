@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.23)
 
 project(realesrgan-ncnn-vulkan-ui VERSION 0.1 LANGUAGES CXX)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
@@ -14,6 +14,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Network)
+
+add_subdirectory(vendor/elzip)
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -31,16 +33,23 @@ set(PROJECT_RESOURCES
         resources/resources.qrc)
 
 
-qt_add_executable(realesrgan-ncnn-vulkan-ui
+qt_add_executable(${PROJECT_NAME}
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         ${PROJECT_RESOURCES}
         )
 
 
-target_link_libraries(realesrgan-ncnn-vulkan-ui PRIVATE Qt6::Widgets Qt6::Network)
+target_link_libraries(${PROJECT_NAME} PRIVATE elzip Qt6::Widgets Qt6::Network)
 
-set_target_properties(realesrgan-ncnn-vulkan-ui PROPERTIES
+
+target_include_directories(${PROJECT_NAME}
+        PRIVATE
+        vendor/elzip/include
+        )
+
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -48,4 +57,4 @@ set_target_properties(realesrgan-ncnn-vulkan-ui PROPERTIES
         WIN32_EXECUTABLE TRUE
         )
 
-qt_finalize_executable(realesrgan-ncnn-vulkan-ui)
+qt_finalize_executable(${PROJECT_NAME})
