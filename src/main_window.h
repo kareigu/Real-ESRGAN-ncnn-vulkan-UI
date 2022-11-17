@@ -32,6 +32,8 @@ private slots:
   void cancel_processing();
 
 private:
+  inline void update_start_button();
+
   QPointer<QProcess> m_cli = nullptr;
 
   QPointer<QWidget> m_main_view = nullptr;

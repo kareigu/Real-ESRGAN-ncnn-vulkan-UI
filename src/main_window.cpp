@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget* parent)
   connect(m_input_select, &PathPicker::path_updated, this, &MainWindow::update_output_filepath);
   m_output_select = new PathPicker(tr("Output"));
   m_output_select->set_save_mode();
+  connect(m_output_select, &PathPicker::path_updated, this, [&] { update_start_button(); });
 
   m_path_selects->layout()->addWidget(m_input_select);
   m_path_selects->layout()->addWidget(m_output_select);
@@ -108,7 +109,7 @@ void MainWindow::update_output_filepath() {
     m_output_select->set_path(path);
   }
 
-  m_start_button->setDisabled(false);
+  update_start_button();
 }
 
 void MainWindow::start_processing() {
@@ -117,7 +118,7 @@ void MainWindow::start_processing() {
   if (m_cli) {
     debugln("Already running");
     m_cancel_button->setDisabled(true);
-    m_start_button->setDisabled(false);
+    update_start_button();
     return;
   }
 
@@ -140,7 +141,7 @@ void MainWindow::start_processing() {
     debugln(program_path);
     logln(tr("Missing CLI files"));
     m_cancel_button->setDisabled(true);
-    m_start_button->setDisabled(false);
+    update_start_button();
     return;
   }
 
@@ -158,7 +159,7 @@ void MainWindow::start_processing() {
     delete m_cli;
     m_cli.clear();
     m_cancel_button->setDisabled(true);
-    m_start_button->setDisabled(false);
+    update_start_button();
   });
 
   m_cli->start(program_path, arguments);
@@ -178,4 +179,8 @@ void MainWindow::cancel_processing() {
 void MainWindow::closeEvent(QCloseEvent* event) {
   m_options_window->close();
   event->accept();
+}
+
+void MainWindow::update_start_button() {
+  m_start_button->setDisabled(m_input_select->path().isEmpty() || m_output_select->path().isEmpty());
 }
