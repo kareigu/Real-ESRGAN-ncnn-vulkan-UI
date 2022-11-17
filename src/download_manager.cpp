@@ -44,8 +44,14 @@ void DownloadManager::download_finished(QNetworkReply* reply) {
   zip_file.close();
   debugln("Wrote temporary zip file");
 
-  elz::extractZip(zip_file.filesystemFileName(), cli_folder.toStdString());
-  debugln("Extracted temporary zip file");
+  try {
+    elz::extractZip(zip_file.filesystemFileName(), cli_folder.toStdString());
+    debugln("Extracted temporary zip file");
+  } catch (const elz::zip_exception& e) {
+    logln(e.what());
+    return;
+  }
+
   if (zip_file.remove())
     debugln("Removed temporary zip file");
 
