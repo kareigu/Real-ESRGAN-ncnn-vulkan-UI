@@ -1,8 +1,8 @@
 #include "path_picker.h"
+#include "message_log.h"
+#include "options.h"
 #include <QFileDialog>
 #include <QHBoxLayout>
-
-#include "message_log.h"
 
 PathPicker::PathPicker(const QString& title, QWidget* parent)
     : QWidget(parent) {
@@ -22,13 +22,19 @@ void PathPicker::m_init() {
   connect(m_browse_button, &QPushButton::released, this, [&] {
     auto current_path = m_path->text();
 
-    auto path = m_save
-                      ? QFileDialog::getSaveFileName(this, tr("Select folder"), current_path)
-                      : QFileDialog::getOpenFileName(this, tr("Select image"), current_path, tr("Image Files (*.png *.jpg *.bmp)"));
+    auto path = ([&] {
+      switch (m_mode) {
+        case PathPicker::SelectFolder:
+          return QFileDialog::getExistingDirectory(this, tr("Select folder"), Options::cli_location());
+        case PathPicker::SaveFile:
+          return QFileDialog::getSaveFileName(this, tr("Save as..."), current_path);
+        case PathPicker::OpenFile:
+          return QFileDialog::getOpenFileName(this, tr("Select image"), current_path, tr("Image Files (*.png *.jpg *.bmp)"));
+      }
+    }());
 
-    debugln(QString("Path selected: { m_select_folder = %1, path = %2 }")
-                    .arg(m_save)
-                    .arg(path));
+    debugln(QString("Path selected: { m_mode = %1, path = %2 }")
+                    .arg(PathPicker::path_picker_mode_strings[static_cast<size_t>(m_mode)], path));
 
     if (path.isEmpty())
       return;
