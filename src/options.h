@@ -10,8 +10,10 @@
   #define PLATFORM_DEFAULT_FETCH_URL "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"
 #elif __APPLE__
   #define PLATFORM_DEFAULT_FETCH_URL "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip"
-#else
+#elif __linux__
   #define PLATFORM_DEFAULT_FETCH_URL "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip"
+#else
+  #error "Unsupported OS"
 #endif
 
 class Options {
