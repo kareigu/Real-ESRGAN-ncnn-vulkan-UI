@@ -84,19 +84,30 @@ MainWindow::MainWindow(QWidget* parent)
 }
 
 void MainWindow::update_output_filepath() {
+  if (!Options::auto_rename()) {
+    debugln("Skipping automatic renaming");
+    return;
+  }
+
   auto path = m_input_select->path();
   if (path.isEmpty()) {
     m_start_button->setDisabled(true);
     return;
   }
 
-  QFileInfo file_info(path);
-  QDir folder = file_info.dir();
-  QString filename_ext = QString("%1_%2x")
-                                 .arg(m_settings_panel->model(), m_settings_panel->up_size());
-  QString filename = QString("%1_%2.%3")
-                             .arg(file_info.baseName(), filename_ext, file_info.completeSuffix());
-  m_output_select->set_path(folder.filePath(filename));
+  if (Options::generate_filename()) {
+    QFileInfo file_info(path);
+    QDir folder = file_info.dir();
+    QString filename_ext = QString("%1_%2x")
+                                   .arg(m_settings_panel->model(), m_settings_panel->up_size());
+    QString filename = QString("%1_%2.%3")
+                               .arg(file_info.baseName(), filename_ext, file_info.completeSuffix());
+    m_output_select->set_path(folder.filePath(filename));
+  } else {
+    debugln("Skipping output name generation");
+    m_output_select->set_path(path);
+  }
+
   m_start_button->setDisabled(false);
 }
 
