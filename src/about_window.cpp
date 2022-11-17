@@ -3,12 +3,25 @@
 #include <QFile>
 #include <QVBoxLayout>
 
+#ifndef PROJECT_VERSION
+  #define PROJECT_VERSION "unknown version"
+#endif
+
 AboutWindow::AboutWindow(QWidget* parent) : QDialog(parent) {
   setWindowTitle(tr("About"));
   setModal(true);
   setFixedSize(QSize(500, 600));
 
   setLayout(new QVBoxLayout);
+
+  m_header = new QLabel(this);
+  m_header->setAlignment(Qt::AlignCenter);
+  auto header_font = m_header->font();
+  header_font.setPointSize(16);
+  header_font.setBold(true);
+  m_header->setFont(header_font);
+  m_header->setText(QString("Real-ESRGAN-ncnn-Vulkan-UI - %1").arg(PROJECT_VERSION));
+  layout()->addWidget(m_header);
 
   m_about_text = new QTextBrowser(this);
   m_about_text->setOpenExternalLinks(true);

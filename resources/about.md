@@ -1,5 +1,3 @@
-# Real-ESRGAN-ncnn-Vulkan-UI
-
 ### Qt6 UI for [Real-ESRGAN-ncnn-Vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan)
 
 BSD 2-Clause License
@@ -29,7 +27,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Source available on [GitHub](https://github.com/kareigu/Real-ESRGAN-ncnn-vulkan-UI)
-  
+
 ### Qt licensed under the GPL
 
 ```

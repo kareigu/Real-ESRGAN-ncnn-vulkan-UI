@@ -2,6 +2,7 @@
 #define ABOUT_WINDOW_H
 
 #include <QDialog>
+#include <QLabel>
 #include <QPointer>
 #include <QPushButton>
 #include <QTextBrowser>
@@ -15,6 +16,7 @@ public:
 private:
   QPointer<QPushButton> m_close_button = nullptr;
   QPointer<QTextBrowser> m_about_text = nullptr;
+  QPointer<QLabel> m_header = nullptr;
 };
 
 #endif// ABOUT_WINDOW_H
