@@ -1,5 +1,7 @@
 #include "about_window.h"
 #include "message_log.h"
+#include "palette.h"
+#include <QApplication>
 #include <QFile>
 #include <QVBoxLayout>
 
@@ -34,8 +36,14 @@ AboutWindow::AboutWindow(QWidget* parent) : QDialog(parent) {
     about_text_contents = "# Failed reading about.md";
   about_file.close();
 
-  m_about_text->setMarkdown(about_text_contents);
+  m_about_text->setHtml(about_text_contents);
   layout()->addWidget(m_about_text);
+
+  m_about_qt_button = new QPushButton(this);
+  m_about_qt_button->setPalette(primary_button_palette());
+  m_about_qt_button->setText("About Qt");
+  connect(m_about_qt_button, &QPushButton::released, this, [] { QApplication::aboutQt(); });
+  layout()->addWidget(m_about_qt_button);
 
   m_close_button = new QPushButton(this);
   m_close_button->setText("Close");

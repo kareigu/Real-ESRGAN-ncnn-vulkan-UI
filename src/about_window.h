@@ -15,6 +15,7 @@ public:
 
 private:
   QPointer<QPushButton> m_close_button = nullptr;
+  QPointer<QPushButton> m_about_qt_button = nullptr;
   QPointer<QTextBrowser> m_about_text = nullptr;
   QPointer<QLabel> m_header = nullptr;
 };
