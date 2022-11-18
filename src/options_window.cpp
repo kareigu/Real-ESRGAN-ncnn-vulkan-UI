@@ -54,6 +54,7 @@ OptionsWindow::OptionsWindow() : QWidget() {
 void OptionsWindow::handle_close() {
   // FIXME: Check for dirty settings and ask to save before closing
   close();
+  delete this;
 }
 
 void OptionsWindow::handle_save() {

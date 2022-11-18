@@ -27,7 +27,11 @@ public:
   void closeEvent(QCloseEvent* event) override;
 
 private slots:
+  void open_options_window();
+  void open_about_window();
+
   void update_output_filepath();
+
   void start_processing();
   void cancel_processing();
 

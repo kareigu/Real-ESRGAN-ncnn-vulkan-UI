@@ -17,11 +17,10 @@ MainWindow::MainWindow(QWidget* parent)
 
 
   m_menu_bar = new QMenuBar(this);
-  m_options_window = new OptionsWindow();
   auto options_action = m_menu_bar->addAction(tr("&Options"));
-  connect(options_action, &QAction::triggered, m_options_window, &OptionsWindow::show_window);
-  m_about_window = new AboutWindow(this);
-  m_menu_bar->addAction(tr("&About"), [&] { m_about_window->show(); });
+  connect(options_action, &QAction::triggered, this, &MainWindow::open_options_window);
+  auto about_action = m_menu_bar->addAction(tr("&About"));
+  connect(about_action, &QAction::triggered, this, &MainWindow::open_about_window);
   setMenuBar(m_menu_bar);
 
   m_main_view = new QWidget(this);
@@ -177,10 +176,25 @@ void MainWindow::cancel_processing() {
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
-  m_options_window->close();
+  if (m_options_window)
+    m_options_window->close();
   event->accept();
 }
 
 void MainWindow::update_start_button() {
   m_start_button->setDisabled(m_input_select->path().isEmpty() || m_output_select->path().isEmpty());
+}
+
+void MainWindow::open_options_window() {
+  if (!m_options_window)
+    m_options_window = new OptionsWindow();
+
+  m_options_window->show_window();
+}
+
+void MainWindow::open_about_window() {
+  if (!m_about_window)
+    m_about_window = new AboutWindow(this);
+
+  m_about_window->show();
 }

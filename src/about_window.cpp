@@ -48,7 +48,7 @@ AboutWindow::AboutWindow(QWidget* parent) : QDialog(parent) {
   m_close_button = new QPushButton(button_container);
   m_close_button->setText("Close");
   m_close_button->setFixedWidth(button_width);
-  connect(m_close_button, &QPushButton::released, this, [&] { this->close(); });
+  connect(m_close_button, &QPushButton::released, this, &AboutWindow::handle_close);
   button_container_layout->addWidget(m_close_button);
 
   m_about_qt_button = new QPushButton(button_container);
@@ -59,4 +59,9 @@ AboutWindow::AboutWindow(QWidget* parent) : QDialog(parent) {
   button_container_layout->addWidget(m_about_qt_button);
 
   layout()->addWidget(button_container);
+}
+
+void AboutWindow::handle_close() {
+  this->close();
+  delete this;
 }
