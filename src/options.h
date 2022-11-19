@@ -18,6 +18,19 @@
 
 class Options {
 public:
+  enum class Types {
+    FETCH_URL,
+    AUTO_SET_OUTPUT,
+    GENERATE_FILENAME,
+    CLI_LOCATION,
+    COUNT,
+  };
+
+  using Types::AUTO_SET_OUTPUT;
+  using Types::CLI_LOCATION;
+  using Types::FETCH_URL;
+  using Types::GENERATE_FILENAME;
+
   [[nodiscard]] static QString fetch_url();
   static bool auto_set_output();
   static bool generate_filename();

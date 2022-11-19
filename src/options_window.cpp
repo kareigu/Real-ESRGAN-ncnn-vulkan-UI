@@ -16,12 +16,11 @@ OptionsWindow::OptionsWindow() : QWidget() {
   auto settings_container = new QWidget(this);
   settings_container->setLayout(new QVBoxLayout);
 
-  // TODO: Implement dirty settings handling
-  //       Wire up events to both options that get notified when changes happen
-  //       Should compare to previously saved settings
   m_fetching_options = new FetchingOptions(settings_container);
+  connect(m_fetching_options, &FetchingOptions::options_changed, this, &OptionsWindow::handle_dirty_check);
   settings_container->layout()->addWidget(m_fetching_options);
   m_general_options = new GeneralOptions(settings_container);
+  connect(m_general_options, &GeneralOptions::options_changed, this, &OptionsWindow::handle_dirty_check);
   settings_container->layout()->addWidget(m_general_options);
 
   auto button_container = new QWidget(this);
@@ -35,8 +34,7 @@ OptionsWindow::OptionsWindow() : QWidget() {
   m_save_button = new QPushButton(button_container);
   m_save_button->setText("Save");
   m_save_button->setPalette(primary_button_palette());
-  // FIXME: Uncomment this once dirty settings handling is implemented
-  // m_save_button->setEnabled(false);
+  m_save_button->setEnabled(false);
   connect(m_save_button, &QPushButton::released, this, &OptionsWindow::handle_save);
 
   m_defaults_button = new QPushButton(button_container);
@@ -66,6 +64,7 @@ void OptionsWindow::handle_save() {
   debugln("Saved auto_set_output");
   Options::set_generate_filename(m_general_options->m_generate_output_name_check->isChecked());
   debugln("Save generate_filename");
+  handle_dirty_check();
   debugln("Saved settings");
 }
 
@@ -74,7 +73,31 @@ void OptionsWindow::handle_defaults() {
   m_fetching_options->m_cli_location->set_path(Options::default_cli_location());
   m_general_options->m_auto_set_output_check->setChecked(Options::default_auto_set_output);
   m_general_options->m_generate_output_name_check->setChecked(Options::default_generate_filename);
+  handle_dirty_check();
   debugln("Restored settings to default");
+}
+
+void OptionsWindow::handle_dirty_check(Options::Types option_type) {
+  switch (option_type) {
+    case Options::FETCH_URL:
+      m_dirty_settings.set_dirty<Options::FETCH_URL>(m_fetching_options->m_fetch_url->text() != Options::fetch_url());
+    case Options::CLI_LOCATION:
+      m_dirty_settings.set_dirty<Options::CLI_LOCATION>(m_fetching_options->m_cli_location->path() != Options::cli_location());
+    case Options::AUTO_SET_OUTPUT:
+      m_dirty_settings.set_dirty<Options::AUTO_SET_OUTPUT>(m_general_options->m_auto_set_output_check->isChecked() != Options::auto_set_output());
+    case Options::GENERATE_FILENAME:
+      m_dirty_settings.set_dirty<Options::GENERATE_FILENAME>(m_general_options->m_generate_output_name_check->isChecked() != Options::generate_filename());
+    default:
+      debugln("Checking all options for dirty");
+      m_dirty_settings.set_dirty<Options::FETCH_URL>(m_fetching_options->m_fetch_url->text() != Options::fetch_url());
+      m_dirty_settings.set_dirty<Options::CLI_LOCATION>(m_fetching_options->m_cli_location->path() != Options::cli_location());
+      m_dirty_settings.set_dirty<Options::AUTO_SET_OUTPUT>(m_general_options->m_auto_set_output_check->isChecked() != Options::auto_set_output());
+      m_dirty_settings.set_dirty<Options::GENERATE_FILENAME>(m_general_options->m_generate_output_name_check->isChecked() != Options::generate_filename());
+      break;
+  }
+
+  debugln(m_dirty_settings ? "Setting dirty" : "Settings clean");
+  m_save_button->setEnabled(m_dirty_settings);
 }
 
 void OptionsWindow::show_window() {
@@ -96,6 +119,7 @@ FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
   fetch_url_label->setText("Download URL: ");
   m_fetch_url = new QLineEdit(fetch_url_container);
   m_fetch_url->setText(Options::fetch_url());
+  connect(m_fetch_url, &QLineEdit::editingFinished, this, [&] { emit options_changed(Options::FETCH_URL); });
   fetch_url_container->layout()->addWidget(fetch_url_label);
   fetch_url_container->layout()->addWidget(m_fetch_url);
   layout()->addWidget(fetch_url_container);
@@ -103,6 +127,7 @@ FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
   m_cli_location = new PathPicker(tr("CLI files location"), this);
   m_cli_location->set_path(Options::cli_location());
   m_cli_location->set_folder_mode();
+  connect(m_cli_location, &PathPicker::path_updated, this, [&] { emit options_changed(Options::CLI_LOCATION); });
   layout()->addWidget(m_cli_location);
 
   auto buttons_container = new QWidget(this);
@@ -144,6 +169,7 @@ GeneralOptions::GeneralOptions(QWidget* parent) : QGroupBox(parent) {
   auto_set_output_check_label->setText("Automatically set output filepath: ");
   m_auto_set_output_check = new QCheckBox(auto_set_output_container);
   m_auto_set_output_check->setChecked(Options::auto_set_output());
+  connect(m_auto_set_output_check, &QCheckBox::stateChanged, this, [&] { emit options_changed(Options::AUTO_SET_OUTPUT); });
   auto_set_output_container->layout()->addWidget(auto_set_output_check_label);
   auto_set_output_container->layout()->addWidget(m_auto_set_output_check);
 
@@ -155,6 +181,7 @@ GeneralOptions::GeneralOptions(QWidget* parent) : QGroupBox(parent) {
   generate_output_name_check_label->setText("Automatically generate output filename: ");
   m_generate_output_name_check = new QCheckBox(generate_output_name_check_container);
   m_generate_output_name_check->setChecked(Options::generate_filename());
+  connect(m_generate_output_name_check, &QCheckBox::stateChanged, this, [&] { emit options_changed(Options::GENERATE_FILENAME); });
   generate_output_name_check_container->layout()->addWidget(generate_output_name_check_label);
   generate_output_name_check_container->layout()->addWidget(m_generate_output_name_check);
 
