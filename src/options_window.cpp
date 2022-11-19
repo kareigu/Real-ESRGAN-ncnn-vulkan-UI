@@ -1,4 +1,5 @@
 #include "options_window.h"
+#include "confirm_dialog.h"
 #include "message_log.h"
 #include "palette.h"
 #include <QBoxLayout>
@@ -50,9 +51,24 @@ OptionsWindow::OptionsWindow() : QWidget() {
 }
 
 void OptionsWindow::handle_close() {
-  // FIXME: Check for dirty settings and ask to save before closing
-  close();
-  delete this;
+  if (!m_dirty_settings) {
+    close();
+    delete this;
+    return;
+  }
+
+  auto confirm_dialog = new ConfirmDialog(this);
+  confirm_dialog->set_title("Close without saving?");
+  confirm_dialog->set_text("You've made unsaved changes, do you want to close the options?");
+  int result = confirm_dialog->exec();
+  delete confirm_dialog;
+
+  debugln(QString("Confirm result: %1").arg(result));
+
+  if (result == 1) {
+    close();
+    delete this;
+  }
 }
 
 void OptionsWindow::handle_save() {

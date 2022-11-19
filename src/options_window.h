@@ -5,6 +5,7 @@
 #include "options.h"
 #include "path_picker.h"
 #include <QCheckBox>
+#include <QCloseEvent>
 #include <QGroupBox>
 #include <QLineEdit>
 #include <QMainWindow>
@@ -59,6 +60,11 @@ class OptionsWindow final : public QWidget {
 public:
   OptionsWindow();
   ~OptionsWindow() final = default;
+
+  void closeEvent(QCloseEvent* event) final {
+    handle_close();
+    event->ignore();
+  }
 
 public slots:
   void handle_close();
