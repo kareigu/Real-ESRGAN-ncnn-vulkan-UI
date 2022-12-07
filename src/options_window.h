@@ -27,16 +27,9 @@ public:
 signals:
   void options_changed(Options::Types);
 
-private slots:
-  void redownload_files();
-  void download_complete();
-
 private:
   QPointer<QLineEdit> m_fetch_url = nullptr;
-  QPointer<QPushButton> m_redownload_button = nullptr;
   QPointer<PathPicker> m_cli_location = nullptr;
-
-  QPointer<DownloadManager> m_download_manager = nullptr;
 };
 
 class GeneralOptions final : public QGroupBox {
@@ -62,12 +55,14 @@ public:
   ~OptionsWindow() final = default;
 
   void closeEvent(QCloseEvent* event) final {
-    handle_close();
-    event->ignore();
+    if (handle_close())
+      event->accept();
+    else
+      event->ignore();
   }
 
 public slots:
-  void handle_close();
+  bool handle_close();
   void handle_save();
   void handle_defaults();
   void handle_dirty_check(Options::Types option_type = Options::Types::COUNT);

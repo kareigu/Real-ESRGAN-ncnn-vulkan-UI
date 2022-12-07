@@ -10,6 +10,7 @@ OptionsWindow::OptionsWindow() : QWidget() {
   setWindowTitle("Options");
   setMinimumSize(QSize(600, 450));
   setMaximumSize(QSize(800, 600));
+  setAttribute(Qt::WA_DeleteOnClose);
 
   auto main_layout = new QVBoxLayout();
   setLayout(main_layout);
@@ -30,7 +31,7 @@ OptionsWindow::OptionsWindow() : QWidget() {
   button_container->setLayout(button_container_layout);
   m_close_button = new QPushButton(button_container);
   m_close_button->setText("Close");
-  connect(m_close_button, &QPushButton::released, this, &OptionsWindow::handle_close);
+  connect(m_close_button, &QPushButton::released, this, &OptionsWindow::close);
 
   m_save_button = new QPushButton(button_container);
   m_save_button->setText("Save");
@@ -50,11 +51,9 @@ OptionsWindow::OptionsWindow() : QWidget() {
   main_layout->addWidget(button_container);
 }
 
-void OptionsWindow::handle_close() {
+bool OptionsWindow::handle_close() {
   if (!m_dirty_settings) {
-    close();
-    delete this;
-    return;
+    return true;
   }
 
   auto confirm_dialog = new ConfirmDialog(this);
@@ -65,10 +64,7 @@ void OptionsWindow::handle_close() {
 
   debugln(QString("Confirm result: %1").arg(result));
 
-  if (result == 1) {
-    close();
-    delete this;
-  }
+  return result == 1;
 }
 
 void OptionsWindow::handle_save() {
@@ -145,35 +141,8 @@ FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
   m_cli_location->set_folder_mode();
   connect(m_cli_location, &PathPicker::path_updated, this, [&] { emit options_changed(Options::CLI_LOCATION); });
   layout()->addWidget(m_cli_location);
-
-  auto buttons_container = new QWidget(this);
-  buttons_container->setLayout(new QHBoxLayout);
-  m_redownload_button = new QPushButton(this);
-  m_redownload_button->setText("Redownload");
-  m_redownload_button->setFixedWidth(80);
-  connect(m_redownload_button, &QPushButton::released, this, &FetchingOptions::redownload_files);
-  buttons_container->layout()->addWidget(m_redownload_button);
-  layout()->addWidget(buttons_container);
 }
 
-void FetchingOptions::redownload_files() {
-  delete m_download_manager;
-  m_download_manager = new DownloadManager(Options::fetch_url(), this);
-
-  connect(m_download_manager, &DownloadManager::download_complete, this, &FetchingOptions::download_complete);
-  m_download_manager->start_download();
-}
-
-void FetchingOptions::download_complete() {
-  if (!m_download_manager) {
-    debugln("No download manager present");
-    return;
-  }
-
-  // TODO: Do something with the downloaded bytes
-  auto info = QString("Download complete - %1 bytes").arg(m_download_manager->downloaded_bytes_count());
-  logln(info);
-}
 
 GeneralOptions::GeneralOptions(QWidget* parent) : QGroupBox(parent) {
   setTitle("General");
