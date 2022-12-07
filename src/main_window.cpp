@@ -1,4 +1,5 @@
 #include "main_window.h"
+#include "confirm_dialog.h"
 #include "palette.h"
 #include <QCoreApplication>
 #include <QDir>
@@ -6,7 +7,9 @@
 #include <QFileInfo>
 #include <QLineEdit>
 #include <QThread>
+#include <QTimer>
 #include <QVBoxLayout>
+#include <QtConcurrent/QtConcurrent>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent) {
@@ -17,8 +20,17 @@ MainWindow::MainWindow(QWidget* parent)
 
 
   m_menu_bar = new QMenuBar(this);
-  auto options_action = m_menu_bar->addAction(tr("&Options"));
+  auto file_menu = m_menu_bar->addMenu(tr("&File"));
+  auto redownload_action = file_menu->addAction(tr("Redownload CLI"));
+  connect(redownload_action, &QAction::triggered, this, [&] {
+    if (!m_download_manager)
+      m_download_manager = new DownloadManager(this);
+
+    m_download_manager->start_download();
+  });
+  auto options_action = file_menu->addAction(tr("&Options"));
   connect(options_action, &QAction::triggered, this, &MainWindow::open_options_window);
+
   auto about_action = m_menu_bar->addAction(tr("&About"));
   connect(about_action, &QAction::triggered, this, &MainWindow::open_about_window);
   setMenuBar(m_menu_bar);
@@ -80,7 +92,12 @@ MainWindow::MainWindow(QWidget* parent)
   m_main_view->layout()->addWidget(m_message_log);
   setCentralWidget(m_main_view);
 
+  connect(this, &MainWindow::cli_files_missing, this, &MainWindow::ask_to_download_cli);
+
   logln("Ready");
+
+  if (!check_for_cli())
+    QTimer::singleShot(500, Qt::TimerType::CoarseTimer, [&] { emit cli_files_missing(); });
 }
 
 void MainWindow::update_output_filepath() {
@@ -121,11 +138,8 @@ void MainWindow::start_processing() {
     return;
   }
 
-#ifdef WIN32
-  QString program_path(Options::cli_location() + "/realesrgan-ncnn-vulkan.exe");
-#else
-  QString program_path(Options::cli_location() + "/realesrgan-ncnn-vulkan");
-#endif
+
+  QString program_path(Options::cli_location() + PLATFORM_EXECUTABLE_NAME);
 
   QStringList arguments;
   arguments << "-i" << m_input_select->path()
@@ -141,6 +155,7 @@ void MainWindow::start_processing() {
     logln(tr("Missing CLI files"));
     m_cancel_button->setDisabled(true);
     update_start_button();
+    ask_to_download_cli();
     return;
   }
 
@@ -197,4 +212,28 @@ void MainWindow::open_about_window() {
     m_about_window = new AboutWindow(this);
 
   m_about_window->show();
+}
+
+bool MainWindow::check_for_cli() {
+  auto cli_folder = Options::cli_location();
+  auto executable = QFile(cli_folder + PLATFORM_EXECUTABLE_NAME);
+  auto models_folder = QDir(cli_folder + "/models");
+
+  return executable.exists() && models_folder.exists();
+}
+
+void MainWindow::ask_to_download_cli() {
+  auto confirm_dialog = new ConfirmDialog(this);
+  confirm_dialog->set_title("CLI missing");
+  confirm_dialog->set_text("You're missing required files to use this software.\nWould you like to download them?");
+  int result = confirm_dialog->exec();
+  delete confirm_dialog;
+
+  if (result != 1)
+    return;
+
+  if (!m_download_manager)
+    m_download_manager = new DownloadManager(this);
+
+  m_download_manager->start_download();
 }

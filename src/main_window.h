@@ -17,6 +17,13 @@
 #include "path_picker.h"
 #include "settings_panel.h"
 
+#ifdef WIN32
+  #define PLATFORM_EXECUTABLE_NAME "/realesrgan-ncnn-vulkan.exe"
+#else
+  #define PLATFORM_EXECUTABLE_NAME "/realesrgan-ncnn-vulkan"
+#endif
+
+
 class MainWindow final : public QMainWindow {
   Q_OBJECT
 
@@ -34,9 +41,16 @@ private slots:
 
   void start_processing();
   void cancel_processing();
+  void ask_to_download_cli();
+
+signals:
+  void cli_files_missing();
 
 private:
   inline void update_start_button();
+  inline bool check_for_cli();
+
+  QPointer<DownloadManager> m_download_manager = nullptr;
 
   QPointer<QProcess> m_cli = nullptr;
 
