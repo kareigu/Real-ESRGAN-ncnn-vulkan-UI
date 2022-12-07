@@ -13,9 +13,6 @@ public:
   explicit AboutWindow(QWidget* parent);
   ~AboutWindow() final = default;
 
-private slots:
-  void handle_close();
-
 private:
   QPointer<QPushButton> m_close_button = nullptr;
   QPointer<QPushButton> m_about_qt_button = nullptr;
