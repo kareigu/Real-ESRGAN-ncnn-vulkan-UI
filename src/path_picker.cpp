@@ -8,7 +8,7 @@ PathPicker::PathPicker(const QString& title, QWidget* parent)
     : QWidget(parent) {
   m_title = new QLabel();
   m_title->setText(QString("%1:").arg(title));
-  m_title->setFixedWidth(45);
+  m_title->setMinimumWidth(45);
   m_init();
 }
 
