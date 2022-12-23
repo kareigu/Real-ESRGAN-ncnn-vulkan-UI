@@ -34,6 +34,11 @@ DownloadManager::DownloadManager(QWidget* parent) : QDialog(parent) {
 }
 
 void DownloadManager::start_download() {
+  if (m_download_in_progress)
+    return;
+
+  m_download_in_progress = true;
+
   QNetworkRequest req(Options::fetch_url());
   auto reply = m_network_manager.get(req);
   connect(reply, &QNetworkReply::errorOccurred, this, &DownloadManager::handle_error);
@@ -86,6 +91,7 @@ void DownloadManager::download_finished(QNetworkReply* reply) {
     debugln("Removed temporary zip file");
 
   m_info_text->setText("Complete");
+  m_download_in_progress = false;
   logln("Download complete");
 }
 

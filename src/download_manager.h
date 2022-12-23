@@ -32,6 +32,8 @@ private:
   QNetworkAccessManager m_network_manager;
   QByteArray m_downloaded_bytes;
 
+  bool m_download_in_progress = false;
+
   QPointer<QLabel> m_info_text = nullptr;
   QPointer<QProgressBar> m_progress_bar = nullptr;
   QPointer<QPushButton> m_close_button = nullptr;
