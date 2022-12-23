@@ -15,6 +15,7 @@
 #include "message_log.h"
 #include "options_window.h"
 #include "path_picker.h"
+#include "queue_window.h"
 #include "settings_panel.h"
 
 #ifdef WIN32
@@ -59,6 +60,7 @@ private:
   QPointer<QMenuBar> m_menu_bar = nullptr;
   QPointer<AboutWindow> m_about_window = nullptr;
   QPointer<OptionsWindow> m_options_window = nullptr;
+  QPointer<QueueWindow> m_queue_window = nullptr;
 
   QPointer<QGroupBox> m_main_controls = nullptr;
   QPointer<QWidget> m_path_selects = nullptr;

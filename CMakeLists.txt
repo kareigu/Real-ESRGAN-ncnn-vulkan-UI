@@ -28,7 +28,9 @@ set(PROJECT_SOURCES
         src/options_window.cpp
         src/options.cpp
         src/download_manager.cpp
-        src/confirm_dialog.cpp)
+        src/confirm_dialog.cpp
+        src/queue_window.cpp
+        src/queue.cpp)
 
 set(PROJECT_RESOURCES
         resources/resources.qrc)

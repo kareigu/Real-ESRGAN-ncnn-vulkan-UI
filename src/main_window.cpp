@@ -28,6 +28,15 @@ MainWindow::MainWindow(QWidget* parent)
 
     m_download_manager->start_download();
   });
+
+  auto queue_action = file_menu->addAction(tr("Queue"));
+  connect(queue_action, &QAction::triggered, this, [&] {
+    if (!m_queue_window)
+      m_queue_window = new QueueWindow();
+
+    m_queue_window->show_window();
+  });
+
   auto options_action = file_menu->addAction(tr("&Options"));
   connect(options_action, &QAction::triggered, this, &MainWindow::open_options_window);
 
@@ -43,6 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   m_path_selects = new QWidget(m_main_controls);
   m_path_selects->setLayout(new QVBoxLayout);
+  m_main_controls->layout()->addWidget(m_path_selects);
 
   m_input_select = new PathPicker(tr("Input"));
   connect(m_input_select, &PathPicker::path_updated, this, &MainWindow::update_output_filepath);
@@ -71,11 +81,17 @@ MainWindow::MainWindow(QWidget* parent)
   m_cancel_button->setFixedSize(button_size);
   connect(m_cancel_button, &QPushButton::released, this, &MainWindow::cancel_processing);
 
+  auto add_to_queue_button = new QPushButton(m_main_buttons);
+  add_to_queue_button->setText(tr("Add to queue"));
+  add_to_queue_button->setFixedHeight(button_size.height());
+  add_to_queue_button->setFixedWidth(110);
+  connect(add_to_queue_button, &QPushButton::released, this, [] { debugln("Add to queue"); });
+
 
   m_main_buttons->layout()->addWidget(m_start_button);
+  m_main_buttons->layout()->addWidget(add_to_queue_button);
   m_main_buttons->layout()->addWidget(m_cancel_button);
 
-  m_main_controls->layout()->addWidget(m_path_selects);
   m_main_controls->layout()->addWidget(m_main_buttons);
 
   m_settings_panel = new SettingsPanel(m_main_view);
