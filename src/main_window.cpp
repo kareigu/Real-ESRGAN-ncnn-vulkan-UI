@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget* parent)
   auto options_action = file_menu->addAction(tr("&Options"));
   connect(options_action, &QAction::triggered, this, &MainWindow::open_options_window);
 
-  auto about_action = m_menu_bar->addAction(tr("&About"));
+  auto help_menu = m_menu_bar->addMenu(tr("&Help"));
+  auto about_action = help_menu->addAction(tr("&About"));
   connect(about_action, &QAction::triggered, this, &MainWindow::open_about_window);
   setMenuBar(m_menu_bar);
 
