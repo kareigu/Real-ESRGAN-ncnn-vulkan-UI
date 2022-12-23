@@ -11,6 +11,7 @@
 DownloadManager::DownloadManager(QWidget* parent) : QDialog(parent) {
   setWindowTitle("Downloading CLI");
   setAttribute(Qt::WA_DeleteOnClose);
+  setModal(true);
   auto layout = new QVBoxLayout;
   setLayout(layout);
   setFixedSize(300, 100);
