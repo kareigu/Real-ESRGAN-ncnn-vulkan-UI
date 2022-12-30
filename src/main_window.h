@@ -44,6 +44,8 @@ private slots:
   void cancel_processing();
   void ask_to_download_cli();
 
+  void add_to_queue();
+
 signals:
   void cli_files_missing();
 

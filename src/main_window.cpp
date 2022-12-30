@@ -85,7 +85,7 @@ MainWindow::MainWindow(QWidget* parent)
   add_to_queue_button->setText(tr("Add to queue"));
   add_to_queue_button->setFixedHeight(button_size.height());
   add_to_queue_button->setFixedWidth(110);
-  connect(add_to_queue_button, &QPushButton::released, this, [] { debugln("Add to queue"); });
+  connect(add_to_queue_button, &QPushButton::released, this, &MainWindow::add_to_queue);
 
 
   m_main_buttons->layout()->addWidget(m_start_button);
@@ -253,4 +253,12 @@ void MainWindow::ask_to_download_cli() {
     m_download_manager = new DownloadManager(this);
 
   m_download_manager->start_download();
+}
+void MainWindow::add_to_queue() {
+  auto queue_item = Queue::Item{
+          .input_path = m_input_select->path(),
+          .output_path = m_output_select->path(),
+          .model = m_settings_panel->raw_model(),
+          .size = m_settings_panel->raw_up_size()};
+  Queue::add(queue_item);
 }
