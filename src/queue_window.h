@@ -1,6 +1,7 @@
 #ifndef QUEUE_WINDOW_H
 #define QUEUE_WINDOW_H
 
+#include "queue.h"
 #include <QWidget>
 
 class QueueWindow final : public QWidget {
@@ -13,18 +14,17 @@ public:
   void show_window();
 
 private:
-
 };
 
 class QueueObject final : public QWidget {
   Q_OBJECT
   friend class QueueWindow;
+
 public:
   ~QueueObject() final = default;
 
 private:
-  QueueObject(QWidget* parent);
-
+  QueueObject(Queue::Item const& queue_item, QWidget* parent);
 };
 
 
