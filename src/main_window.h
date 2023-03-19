@@ -39,6 +39,7 @@ private slots:
   void open_about_window();
 
   void update_output_filepath();
+  void update_start_and_queue_button_state();
 
   void start_processing();
   void cancel_processing();
@@ -50,7 +51,6 @@ signals:
   void cli_files_missing();
 
 private:
-  inline void update_start_button();
   inline bool check_for_cli();
 
   QPointer<DownloadManager> m_download_manager = nullptr;
@@ -71,6 +71,7 @@ private:
 
   QPointer<QWidget> m_main_buttons = nullptr;
   QPointer<QPushButton> m_start_button = nullptr;
+  QPointer<QPushButton> m_add_to_queue_button = nullptr;
   QPointer<QPushButton> m_cancel_button = nullptr;
 
   QPointer<SettingsPanel> m_settings_panel = nullptr;

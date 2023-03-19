@@ -56,9 +56,10 @@ MainWindow::MainWindow(QWidget* parent)
 
   m_input_select = new PathPicker(tr("Input"));
   connect(m_input_select, &PathPicker::path_updated, this, &MainWindow::update_output_filepath);
+  connect(m_input_select, &PathPicker::path_updated, this, &MainWindow::update_start_and_queue_button_state);
   m_output_select = new PathPicker(tr("Output"));
-  m_output_select->set_save_mode();
-  connect(m_output_select, &PathPicker::path_updated, this, [&] { update_start_button(); });
+  m_output_select->set_to_save_mode();
+  connect(m_output_select, &PathPicker::path_updated, this, &MainWindow::update_start_and_queue_button_state);
 
   m_path_selects->layout()->addWidget(m_input_select);
   m_path_selects->layout()->addWidget(m_output_select);
@@ -75,21 +76,21 @@ MainWindow::MainWindow(QWidget* parent)
   m_start_button->setDisabled(true);
   connect(m_start_button, &QPushButton::released, this, &MainWindow::start_processing);
 
+  m_add_to_queue_button = new QPushButton(m_main_buttons);
+  m_add_to_queue_button->setText(tr("Add to queue"));
+  m_add_to_queue_button->setFixedHeight(button_size.height());
+  m_add_to_queue_button->setFixedWidth(110);
+  m_add_to_queue_button->setDisabled(true);
+  connect(m_add_to_queue_button, &QPushButton::released, this, &MainWindow::add_to_queue);
+
   m_cancel_button = new QPushButton(m_main_buttons);
   m_cancel_button->setDisabled(true);
   m_cancel_button->setText("&Cancel");
   m_cancel_button->setFixedSize(button_size);
   connect(m_cancel_button, &QPushButton::released, this, &MainWindow::cancel_processing);
 
-  auto add_to_queue_button = new QPushButton(m_main_buttons);
-  add_to_queue_button->setText(tr("Add to queue"));
-  add_to_queue_button->setFixedHeight(button_size.height());
-  add_to_queue_button->setFixedWidth(110);
-  connect(add_to_queue_button, &QPushButton::released, this, &MainWindow::add_to_queue);
-
-
   m_main_buttons->layout()->addWidget(m_start_button);
-  m_main_buttons->layout()->addWidget(add_to_queue_button);
+  m_main_buttons->layout()->addWidget(m_add_to_queue_button);
   m_main_buttons->layout()->addWidget(m_cancel_button);
 
   m_main_controls->layout()->addWidget(m_main_buttons);
@@ -125,7 +126,7 @@ void MainWindow::update_output_filepath() {
 
   auto path = m_input_select->path();
   if (path.isEmpty()) {
-    m_start_button->setDisabled(true);
+    m_output_select->set_path("");
     return;
   }
 
@@ -142,7 +143,7 @@ void MainWindow::update_output_filepath() {
     m_output_select->set_path(path);
   }
 
-  update_start_button();
+  update_start_and_queue_button_state();
 }
 
 void MainWindow::start_processing() {
@@ -151,7 +152,7 @@ void MainWindow::start_processing() {
   if (m_cli) {
     debugln("Already running");
     m_cancel_button->setDisabled(true);
-    update_start_button();
+    update_start_and_queue_button_state();
     return;
   }
 
@@ -171,7 +172,7 @@ void MainWindow::start_processing() {
     debugln(program_path);
     logln(tr("Missing CLI files"));
     m_cancel_button->setDisabled(true);
-    update_start_button();
+    update_start_and_queue_button_state();
     ask_to_download_cli();
     return;
   }
@@ -190,7 +191,7 @@ void MainWindow::start_processing() {
     delete m_cli;
     m_cli.clear();
     m_cancel_button->setDisabled(true);
-    update_start_button();
+    update_start_and_queue_button_state();
   });
 
   m_cli->start(program_path, arguments);
@@ -213,8 +214,9 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   event->accept();
 }
 
-void MainWindow::update_start_button() {
+void MainWindow::update_start_and_queue_button_state() {
   m_start_button->setDisabled(m_input_select->path().isEmpty() || m_output_select->path().isEmpty());
+  m_add_to_queue_button->setDisabled(m_input_select->path().isEmpty() || m_output_select->path().isEmpty());
 }
 
 void MainWindow::open_options_window() {

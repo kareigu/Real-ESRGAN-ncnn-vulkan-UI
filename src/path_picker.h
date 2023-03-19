@@ -31,9 +31,9 @@ public:
   explicit PathPicker(QWidget* parent = nullptr);
   ~PathPicker() override = default;
 
-  void set_open_mode() { m_mode = OpenFile; }
-  void set_save_mode() { m_mode = SaveFile; }
-  void set_folder_mode() { m_mode = SelectFolder; }
+  void set_to_open_mode() { m_mode = OpenFile; }
+  void set_to_save_mode() { m_mode = SaveFile; }
+  void set_to_folder_mode() { m_mode = SelectFolder; }
 
   PathPickerMode mode() { return m_mode; }
 

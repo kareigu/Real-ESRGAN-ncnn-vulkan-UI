@@ -138,7 +138,7 @@ FetchingOptions::FetchingOptions(QWidget* parent) : QGroupBox(parent) {
 
   m_cli_location = new PathPicker(tr("CLI files location"), this);
   m_cli_location->set_path(Options::cli_location());
-  m_cli_location->set_folder_mode();
+  m_cli_location->set_to_folder_mode();
   connect(m_cli_location, &PathPicker::path_updated, this, [&] { emit options_changed(Options::CLI_LOCATION); });
   layout()->addWidget(m_cli_location);
 }

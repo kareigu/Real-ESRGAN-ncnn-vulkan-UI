@@ -16,9 +16,10 @@ PathPicker::PathPicker(QWidget* parent) : QWidget(parent) { m_init(); }
 
 void PathPicker::m_init() {
   m_path = new QLineEdit();
+  connect(m_path, &QLineEdit::textChanged, this, [&] { emit path_updated(); });
+
   m_browse_button = new QPushButton();
   m_browse_button->setText(tr("Browse"));
-
   connect(m_browse_button, &QPushButton::released, this, [&] {
     auto current_path = m_path->text();
 
@@ -40,7 +41,6 @@ void PathPicker::m_init() {
       return;
 
     m_path->setText(path);
-    emit path_updated();
   });
 
   setLayout(new QHBoxLayout);
