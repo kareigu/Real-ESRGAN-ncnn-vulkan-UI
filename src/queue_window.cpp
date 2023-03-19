@@ -54,7 +54,11 @@ void QueueWindow::show_window() {
 }
 
 
+constexpr int QUEUE_OBJECT_INPUT_WIDTH = 350;
+constexpr int QUEUE_OBJECT_BUTTON_BASE_SIZE = 24;
+
 QueueObject::QueueObject(Queue::Item const& queue_item, QWidget* parent) : QWidget(parent) {
+  setFixedHeight(80);
   auto layout = new QHBoxLayout;
   setLayout(layout);
 
@@ -62,10 +66,10 @@ QueueObject::QueueObject(Queue::Item const& queue_item, QWidget* parent) : QWidg
   paths_container->setLayout(new QVBoxLayout);
   auto input_path = new QLabel(paths_container);
   input_path->setText(queue_item.input_path.isEmpty() ? "No input path" : queue_item.input_path);
-  input_path->setFixedWidth(350);
+  input_path->setFixedWidth(QUEUE_OBJECT_INPUT_WIDTH);
   auto output_path = new QLabel(paths_container);
   output_path->setText(queue_item.output_path.isEmpty() ? "No output path" : queue_item.output_path);
-  output_path->setFixedWidth(350);
+  output_path->setFixedWidth(QUEUE_OBJECT_INPUT_WIDTH);
   paths_container->layout()->addWidget(input_path);
   paths_container->layout()->addWidget(output_path);
   layout->addWidget(paths_container);
@@ -82,11 +86,11 @@ QueueObject::QueueObject(Queue::Item const& queue_item, QWidget* parent) : QWidg
 
   auto edit_button = new QPushButton(this);
   edit_button->setText(tr("Edit"));
-  edit_button->setFixedSize(50, 24);
+  edit_button->setFixedSize(50, QUEUE_OBJECT_BUTTON_BASE_SIZE);
   layout->addWidget(edit_button);
 
   auto remove_button = new QPushButton(this);
   remove_button->setText("X");
-  remove_button->setFixedSize(24, 24);
+  remove_button->setFixedSize(QUEUE_OBJECT_BUTTON_BASE_SIZE, QUEUE_OBJECT_BUTTON_BASE_SIZE);
   layout->addWidget(remove_button);
 }
