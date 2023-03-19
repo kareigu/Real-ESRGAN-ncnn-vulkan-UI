@@ -1,12 +1,15 @@
 #include "queue.h"
+#include "message_log.h"
 
 
 void Queue::add(Item& item) {
-  m_queue.append(std::move(item));
+  auto uuid = QUuid::createUuid();
+  m_queue[uuid] = std::move(item);
 }
 
-void Queue::remove(qsizetype id) {
-  m_queue.remove(id);
+void Queue::remove(QUuid uuid) {
+  debugln(QString("Remove queue from queue: %1").arg(uuid.toString()));
+  m_queue.remove(uuid);
 }
 
 bool Queue::is_empty() {

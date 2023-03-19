@@ -2,7 +2,11 @@
 #define QUEUE_H
 
 #include "settings_panel.h"
+#include <QMap>
 #include <QString>
+#include <QUuid>
+#include <functional>
+
 
 class Queue {
 public:
@@ -13,16 +17,17 @@ public:
     SizeOptions size;
   };
 
-  [[nodiscard]] static QList<Item> const& get_items() { return m_queue; }
+  [[nodiscard]] static QMap<QUuid, Item> const& get_items() { return m_queue; }
+  static qsizetype length() { return m_queue.count(); }
   static void add(Item& item);
-  static void remove(qsizetype id);
+  static void remove(QUuid uuid);
 
   static bool is_empty();
   static void clear();
 
 
 private:
-  inline static QList<Item> m_queue{};
+  inline static QMap<QUuid, Item> m_queue{};
 };
 
 

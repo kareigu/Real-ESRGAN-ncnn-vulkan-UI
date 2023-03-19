@@ -263,4 +263,6 @@ void MainWindow::add_to_queue() {
           .model = m_settings_panel->raw_model(),
           .size = m_settings_panel->raw_up_size()};
   Queue::add(queue_item);
+  if (m_queue_window)
+    m_queue_window->update_window();
 }

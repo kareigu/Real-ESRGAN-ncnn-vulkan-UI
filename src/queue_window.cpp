@@ -1,4 +1,5 @@
 #include "queue_window.h"
+#include "message_log.h"
 #include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
@@ -12,28 +13,14 @@ QueueWindow::QueueWindow() {
   auto layout = new QVBoxLayout;
   setLayout(layout);
 
-  auto scroll_area = new QScrollArea(this);
-  scroll_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-  scroll_area->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  scroll_area->setWidgetResizable(true);
-  layout->addWidget(scroll_area);
+  m_scroll_area = new QScrollArea(this);
+  m_scroll_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  m_scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  m_scroll_area->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  m_scroll_area->setWidgetResizable(true);
+  layout->addWidget(m_scroll_area);
 
-  if (Queue::is_empty()) {
-    auto empty = new QLabel(scroll_area);
-    empty->setText("Queue is empty");
-    empty->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    scroll_area->setWidget(empty);
-  } else {
-    auto object_list = new QWidget(scroll_area);
-    object_list->setLayout(new QVBoxLayout);
-    for (const auto& item : Queue::get_items()) {
-      auto object = new QueueObject(item, object_list);
-      object_list->layout()->addWidget(object);
-    }
-    scroll_area->setWidget(object_list);
-  }
-
+  rebuild_scroll_list();
 
   auto button_container = new QWidget(this);
   auto button_container_layout = new QHBoxLayout;
@@ -44,6 +31,38 @@ QueueWindow::QueueWindow() {
   connect(close_button, &QPushButton::released, this, &QWidget::close);
   button_container_layout->addWidget(close_button);
   layout->addWidget(button_container);
+}
+
+void QueueWindow::rebuild_scroll_list() {
+  if (m_scroll_area->widget())
+    delete m_scroll_area->widget();
+
+  if (Queue::is_empty()) {
+    auto empty = new QLabel(m_scroll_area);
+    empty->setText("Queue is empty");
+    empty->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_scroll_area->setWidget(empty);
+  } else {
+    auto object_list = new QWidget(m_scroll_area);
+    object_list->setLayout(new QVBoxLayout);
+
+    for (const auto& item : Queue::get_items().asKeyValueRange()) {
+      auto object = new QueueObject(item.second, object_list);
+      auto uuid = item.first;
+      connect(object, &QueueObject::remove_clicked, this, [this, object, uuid] {
+        Queue::remove(uuid);
+        delete object;
+        rebuild_scroll_list();
+      });
+      object_list->layout()->addWidget(object);
+    }
+    m_scroll_area->setWidget(object_list);
+  }
+}
+
+void QueueWindow::update_window() {
+  debugln("Updating QueueWindow");
+  rebuild_scroll_list();
 }
 
 void QueueWindow::show_window() {
@@ -92,5 +111,6 @@ QueueObject::QueueObject(Queue::Item const& queue_item, QWidget* parent) : QWidg
   auto remove_button = new QPushButton(this);
   remove_button->setText("X");
   remove_button->setFixedSize(QUEUE_OBJECT_BUTTON_BASE_SIZE, QUEUE_OBJECT_BUTTON_BASE_SIZE);
+  connect(remove_button, &QPushButton::released, this, [&] { emit remove_clicked(); });
   layout->addWidget(remove_button);
 }

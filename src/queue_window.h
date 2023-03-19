@@ -2,6 +2,7 @@
 #define QUEUE_WINDOW_H
 
 #include "queue.h"
+#include <QScrollArea>
 #include <QWidget>
 
 class QueueWindow final : public QWidget {
@@ -12,8 +13,12 @@ public:
   ~QueueWindow() final = default;
 
   void show_window();
+  void update_window();
 
 private:
+  void rebuild_scroll_list();
+
+  QPointer<QScrollArea> m_scroll_area = nullptr;
 };
 
 class QueueObject final : public QWidget {
@@ -22,6 +27,9 @@ class QueueObject final : public QWidget {
 
 public:
   ~QueueObject() final = default;
+
+signals:
+  void remove_clicked();
 
 private:
   QueueObject(Queue::Item const& queue_item, QWidget* parent);
