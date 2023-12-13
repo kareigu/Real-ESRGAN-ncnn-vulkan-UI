@@ -1,5 +1,6 @@
 #include "queue_window.h"
 #include "message_log.h"
+#include "src/settings_panel.h"
 #include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
@@ -53,6 +54,7 @@ void QueueWindow::rebuild_scroll_list() {
         Queue::remove(uuid);
         delete object;
         rebuild_scroll_list();
+        emit queue_item_removed();
       });
       object_list->layout()->addWidget(object);
     }
@@ -96,9 +98,9 @@ QueueObject::QueueObject(Queue::Item const& queue_item, QWidget* parent) : QWidg
   auto settings_container = new QWidget(this);
   settings_container->setLayout(new QVBoxLayout);
   auto model = new QLabel(settings_container);
-  model->setText("Model: placeholder");
+  model->setText(QString("Model: %1").arg(model_option_to_string(queue_item.model)));
   auto size = new QLabel(settings_container);
-  size->setText("Size: X4");
+  size->setText(QString("Size: %1x").arg(static_cast<int>(queue_item.size)));
   settings_container->layout()->addWidget(model);
   settings_container->layout()->addWidget(size);
   layout->addWidget(settings_container);

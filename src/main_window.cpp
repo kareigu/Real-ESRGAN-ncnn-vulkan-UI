@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget* parent)
     if (!m_queue_window)
       m_queue_window = new QueueWindow();
 
+    connect(m_queue_window, &QueueWindow::queue_item_removed, this, &MainWindow::update_start_and_queue_button_state);
     m_queue_window->show_window();
   });
 
@@ -215,8 +216,10 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 }
 
 void MainWindow::update_start_and_queue_button_state() {
-  m_start_button->setDisabled(m_input_select->path().isEmpty() || m_output_select->path().isEmpty());
-  m_add_to_queue_button->setDisabled(m_input_select->path().isEmpty() || m_output_select->path().isEmpty());
+  bool inputs_empty = m_input_select->path().isEmpty() || m_output_select->path().isEmpty();
+  bool queue_empty = Queue::is_empty();
+  m_start_button->setDisabled(inputs_empty && queue_empty);
+  m_add_to_queue_button->setDisabled(inputs_empty);
 }
 
 void MainWindow::open_options_window() {
@@ -265,4 +268,8 @@ void MainWindow::add_to_queue() {
   Queue::add(queue_item);
   if (m_queue_window)
     m_queue_window->update_window();
+
+  logln(QString("Added \"%1\" to queue").arg(m_input_select->path()));
+  m_input_select->clear();
+  m_output_select->clear();
 }

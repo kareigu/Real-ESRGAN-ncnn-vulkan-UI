@@ -14,6 +14,8 @@ public:
 
   void show_window();
   void update_window();
+signals:
+  void queue_item_removed();
 
 private:
   void rebuild_scroll_list();

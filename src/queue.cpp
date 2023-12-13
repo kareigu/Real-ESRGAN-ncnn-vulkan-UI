@@ -8,7 +8,7 @@ void Queue::add(Item& item) {
 }
 
 void Queue::remove(QUuid uuid) {
-  debugln(QString("Remove queue from queue: %1").arg(uuid.toString()));
+  debugln(QString("Removed from queue: %1").arg(uuid.toString()));
   m_queue.remove(uuid);
 }
 

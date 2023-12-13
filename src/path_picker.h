@@ -40,6 +40,8 @@ public:
   [[nodiscard]] QString path() const { return m_path->text(); }
   void set_path(const QString& path) { m_path->setText(path); }
 
+  void clear() { m_path->clear(); }
+
 signals:
   void path_updated();
 
