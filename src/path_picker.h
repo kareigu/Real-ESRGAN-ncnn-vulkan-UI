@@ -6,7 +6,6 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QWidget>
-#include <functional>
 
 class PathPicker : public QWidget {
   Q_OBJECT
@@ -41,6 +40,7 @@ public:
   void set_path(const QString& path) { m_path->setText(path); }
 
   void clear() { m_path->clear(); }
+  bool is_empty() { return m_path->text().isEmpty(); }
 
 signals:
   void path_updated();

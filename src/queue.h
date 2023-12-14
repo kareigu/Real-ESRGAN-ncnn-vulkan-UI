@@ -5,7 +5,6 @@
 #include <QMap>
 #include <QString>
 #include <QUuid>
-#include <functional>
 
 
 class Queue {
@@ -21,6 +20,8 @@ public:
   static qsizetype length() { return m_queue.count(); }
   static void add(Item& item);
   static void remove(QUuid uuid);
+
+  static Item pop() { return m_queue.take(m_queue.lastKey()); }
 
   static bool is_empty();
   static void clear();

@@ -1,6 +1,8 @@
 #include "main_window.h"
 #include "confirm_dialog.h"
 #include "palette.h"
+#include "src/queue.h"
+#include "src/settings_panel.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -148,6 +150,9 @@ void MainWindow::update_output_filepath() {
 }
 
 void MainWindow::start_processing() {
+  if (!Queue::is_empty() && !(m_input_select->is_empty() && m_output_select->is_empty()))
+    add_to_queue();
+
   m_start_button->setDisabled(true);
   m_cancel_button->setDisabled(false);
   if (m_cli) {
@@ -159,12 +164,6 @@ void MainWindow::start_processing() {
 
 
   QString program_path(Options::cli_location() + PLATFORM_EXECUTABLE_NAME);
-
-  QStringList arguments;
-  arguments << "-i" << m_input_select->path()
-            << "-o" << m_output_select->path()
-            << "-n" << m_settings_panel->model()
-            << "-s" << m_settings_panel->up_size();
 
   QFile program(program_path);
 
@@ -193,8 +192,25 @@ void MainWindow::start_processing() {
     m_cli.clear();
     m_cancel_button->setDisabled(true);
     update_start_and_queue_button_state();
+    if (!Queue::is_empty()) {
+      start_processing();
+    }
   });
 
+  QStringList arguments;
+  if (Queue::is_empty()) {
+    arguments << "-i" << m_input_select->path()
+              << "-o" << m_output_select->path()
+              << "-n" << m_settings_panel->model()
+              << "-s" << m_settings_panel->up_size();
+  } else {
+    auto queue_item = Queue::pop();
+    arguments << "-i" << queue_item.input_path
+              << "-o" << queue_item.output_path
+              << "-n" << model_option_to_string(queue_item.model)
+              << "-s" << QString("%1").arg(static_cast<int>(queue_item.size));
+    logln(QString("Upscaling %1 from queue").arg(queue_item.input_path));
+  }
   m_cli->start(program_path, arguments);
 }
 
