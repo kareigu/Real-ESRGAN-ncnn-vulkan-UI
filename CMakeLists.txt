@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(realesrgan-ncnn-vulkan-ui VERSION 0.3 LANGUAGES CXX)
+project(realesrgan-ncnn-vulkan-ui VERSION 0.4 LANGUAGES CXX)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 add_compile_definitions(PROJECT_VERSION="v${PROJECT_VERSION}")
 
