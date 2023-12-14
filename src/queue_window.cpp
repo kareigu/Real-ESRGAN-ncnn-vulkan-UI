@@ -105,10 +105,11 @@ QueueObject::QueueObject(Queue::Item const& queue_item, QWidget* parent) : QWidg
   settings_container->layout()->addWidget(size);
   layout->addWidget(settings_container);
 
-  auto edit_button = new QPushButton(this);
-  edit_button->setText(tr("Edit"));
-  edit_button->setFixedSize(50, QUEUE_OBJECT_BUTTON_BASE_SIZE);
-  layout->addWidget(edit_button);
+  // TODO: Disabled for now, possibly implement later
+  /* auto edit_button = new QPushButton(this); */
+  /* edit_button->setText(tr("Edit")); */
+  /* edit_button->setFixedSize(50, QUEUE_OBJECT_BUTTON_BASE_SIZE); */
+  /* layout->addWidget(edit_button); */
 
   auto remove_button = new QPushButton(this);
   remove_button->setText("X");
